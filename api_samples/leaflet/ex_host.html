@@ -1,0 +1,21 @@
+﻿<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="http://maps.kosmosnimki.ru/api/apil.js?key=56AAB7DB8B06FE39BDB3FDCA7276302B" charset="windows-1251"></script>
+</head>
+<title>GeoMixer API - примеры использования</title>
+
+
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+
+
+<script>
+        createFlashMap(document.getElementById("map"), "maps.kosmosnimki.ru", "CKELK", function(map) <!--загружает выборочную карту с выборочного хоста, на котором установлен GeoMixer и накладывает ее поверх подложки Kosmosnimki-->
+		{ 
+			map.moveTo(37, 55, 4); //позиционирует карту по координатам центра и выбирает масштаб		
+		}); 
+</script>
+
+</body>
+</html>
