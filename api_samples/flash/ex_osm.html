@@ -1,0 +1,31 @@
+<html>
+<head>
+<script src="http://maps.kosmosnimki.ru/api/api.js?key=56AAB7DB8B06FE39BDB3FDCA7276302B"></script> <!-- api-ключ для доступа к сервису API, полученный на account.kosmosnimki.ru для сайта kosmosnimki.ru, на котором размещена данная веб-страница --><!-- ВНИМАНИЕ! ДЛЯ ТЕСТИРОВАНИЯ С ЛОКАЛЬНОГО ДИСКА ИСПОЛЬЗУЙТЕ LOCALHOST -->
+
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+<script>
+	createFlashMap(document.getElementById("map"), 
+		function(map)
+		{
+			map.moveToCoordinates("53.42 N, 35.23 E");
+							
+			var o = map.addObject();
+			o.setOSMTiles(); //обращается к тайлам OSM, используя функцию setTiles() - см. http://kosmosnimki.ru/geomixer/docs/api_samples/ex_add_tiles.html
+
+			o.setAsBaseLayer("OSM"); //добавляет OSM в базовые слои
+			
+			map.setBaseLayer("OSM"); //устанавливает слой "Карта" слоем по умолчанию
+			
+		});
+
+</script>
+
+
+</body>
+</html>
