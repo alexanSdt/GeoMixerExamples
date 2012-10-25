@@ -1,0 +1,60 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/api.js?key=56AAB7DB8B06FE39BDB3FDCA7276302B" charset="windows-1251"></script> 
+
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div>
+<br><br>
+
+<input type="checkbox" id="margins_checkbox" />
+<label for="margins_checkbox">Убрать черные поля</label>
+<script> 
+
+createFlashMap(
+	document.getElementById("map"), 
+	function(map) 
+	{
+/*
+		var x1 = 136.59558;
+		var y1 = 55.613245;
+		var x2 = 137.8782;
+		var y2 = 56.344192;
+*/
+		var x1 = 136.59558;
+		var y1 = 56.344192;
+		var x2 = 137.8782;
+		var y2 = 55.613245;
+
+		var o = map.addObject(); // добавляет объект на карту
+		o.setImage(
+			"../img/S4I2L0_309236_120513_merc_x33.jpg",
+			x1, y1, x2, y1, x2, y2, x1, y2
+		); // накладывает прямоугольное изображение по координатам четырех углов, используя две пары координат
+		map.moveTo((x1 + x2)/2, (y1 + y2)/2, 9); // перемещает карту в центр данного изображения
+		
+        map.setMode("satellite");
+		
+		var checkbox = document.getElementById("margins_checkbox");
+		var updateMargins = function()
+		{
+				//o.setPolygon([56.436515, 58.568194, 56.862488, 58.499816, 56.725159, 58.293616, 56.304932, 58.362965]);
+			if (checkbox.checked)
+				o.setPolygon([136.90579, 56.301281, 137.83902, 56.150009, 137.53169, 55.639533, 136.60979, 55.788635]);
+			else
+				o.setRectangle(x1, y1, x2, y2);
+		} // устанавливает границы полигона по четырем парам координат углов
+		checkbox.onclick = updateMargins;
+		checkbox.checked = false;
+		updateMargins(); // обрезает изображение по заданной границе полигона
+	}
+);
+
+</script> 
+
+
+</body>
+</html>
