@@ -1,0 +1,115 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/api.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script> 
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<button id="button1">Показать/Скрыть вкладку overlays</button>
+<br/>
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+<br/>
+
+
+<script>
+	createFlashMap(document.getElementById("map"), function(map)
+	{
+		map.moveTo(29.168685, 53.173022, 6);
+
+		var overlaysTools = null;
+		var overlays = function()
+		{
+			overlaysTools = new gmxAPI._ToolsContainer('overlays');		// Создание контейнера переключателей вкладок
+			
+			// Пример вкладки OSM с переключением подложки на satellite 
+			var over1 = null;	
+			var onClickOver1 = function() {
+				var mode = 'map';
+				if(!over1) {
+					over1 = gmxAPI.map.addObject();
+					over1.setBackgroundTiles(function(i, j, z)
+					{
+						var letter = ["a", "b", "c", "d"][((i + j)%4 + 4)%4];
+						var size = Math.pow(2, z - 1);
+						return "http://" + letter + ".tile.osmosnimki.ru/hyb/" + z + "/" + (i + size) + "/" + (size - j - 1) + ".png";
+					}, 1);
+					mode = 'satellite';
+				} else {
+					over1.setVisible(!over1.isVisible);
+					mode = (over1.isVisible ? 'satellite':'map');
+				}
+				if(over1.isVisible) map.setMode(mode);
+			};
+			overlaysTools.addTool( 'Overlay1', {				// Добавление новой вкладки
+				'onClick': onClickOver1,
+				'onCancel': onClickOver1,
+				'onmouseover': function() { this.style.color = "orange"; },
+				'onmouseout': function() { this.style.color = "wheat"; },
+				'hint': 'Гибрид OSM'
+			});
+
+			// Пример вкладки с прозрачным растровым слоем
+			var over2 = null;
+			var onClickOver2 = function() {
+				if(!over2) {
+					var baseAddress = "http://maps.kosmosnimki.ru/";
+					var sessionKey = encodeURIComponent(window.KOSMOSNIMKI_SESSION_KEY);
+					var tileSenderPrefix = baseAddress + 
+						"TileSender.ashx?ModeKey=tile" + 
+						"&MapName=946GH" + 
+						"&LayerName=7A311DA9119B4E59ADAE12B8438A1E0D" +
+						"&key=" + sessionKey;
+				
+					over2 = gmxAPI.map.addObject();
+					over2.setBackgroundTiles(function(i, j, z)
+					{
+						return tileSenderPrefix + "&z=" + z + "&x=" + i + "&y=" + j;
+					}, 1);
+				} else {
+					over2.setVisible(!over2.isVisible);
+				}
+			};
+			overlaysTools.addTool( 'Overlay2', {			// Добавление новой вкладки
+				'onClick': onClickOver2,
+				'onCancel': onClickOver2,
+				'onmouseover': function() { this.style.color = "orange"; },
+				'onmouseout': function() { this.style.color = "wheat"; },
+				'hint': 'Отмывка рельефа'
+			});
+
+			// Пример вкладки с векторным слоем
+			var over3 = null;
+			var onClickOver3 = function() {
+				if(!over3) {
+					// описание векторного слоя
+					var layer = {"properties":{"LayerID":2517,"name":"347D90C1D6574441BBF36D2472E76C36","title":"Субъекты РФ","description":null,"type":"Vector","MinZoom":1,"MaxZoom":3,"date":"14.07.2009","Copyright":null,"Legend":null,"EncodeSource":"windows-1251","Owner":"LayerManager","MetaProperties":{},"Tags":[],"LayerVersion":1,"identityField":"ogc_fid","tiles":[-1,0,1,0,1,3,1,1,3,0,1,2,1,0,2,1,1,2],"tilesVers":[0,0,0,0,0,0],"Processing":{},"GeometryType":"polygon","attributes":["OBL_NAME","OKRUG"],"attrTypes":["string","string"],"metadata":{},"Access":"edit","styles":[{"MinZoom":4,"MaxZoom":6,"BalloonEnable":false,"DisableBalloonOnClick":true,"DisableBalloonOnMouseMove":true,"RenderStyle":{"marker":{"size":2,"center":true},"outline":{"color":15113446,"thickness":2},"label":{"field":"OBL_NAME","color":16777215,"size":15,"haloColor":4076518}}}],"visible":false},"geometry":{"type":"POLYGON","coordinates":[[[-20037507.07,5013020.24],[20037507.07,5013020.24],[20037507.07,16812349.31],[-20037507.07,16812349.31],[-20037507.07,5013020.24]]]}};
+					layer.properties.hostName = 'maps.kosmosnimki.ru';	// задать хост с которого берем слой
+					map.addLayer(layer, true);							// добавить слой
+					over3 = map.layers['347D90C1D6574441BBF36D2472E76C36'];
+				} else {
+					over3.setVisible(!over3.isVisible);
+				}
+			};
+			overlaysTools.addTool( 'Overlay3', {			// Добавление новой вкладки
+				'onClick': onClickOver3,
+				'onCancel': onClickOver3,
+				'onmouseover': function() { this.style.color = "orange"; },
+				'onmouseout': function() { this.style.color = "wheat"; },
+				'hint': 'Субъекты РФ'
+			});
+		}
+
+		overlays();		// установить вкладку overlays
+
+		document.getElementById("button1").onclick = function()
+		{
+			if(overlaysTools) {
+				overlaysTools.setVisible(!overlaysTools.isVisible); 		// показать/скрыть вкладку overlays
+			}
+		}
+   	}
+   );
+</script>
+</body>
+</html>

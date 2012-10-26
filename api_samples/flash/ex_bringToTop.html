@@ -1,0 +1,42 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/api.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script> 
+<title>GeoMixer API - примеры использования</title>
+</head>
+<body>
+<div id="map" style="width: 600px; height: 400px;"></div>
+<br />
+<button id="show_objects">Поместить слой выше</button>
+<script>
+
+var div = document.getElementById('map');
+
+createFlashMap(div, "maps.kosmosnimki.ru", "7VKHM", function (map) 
+	{
+		map.moveTo(37.99, 55.83, 8);
+		
+		var arr = [map.layers["roadblocks_z15"], map.layers["stations_edit"]];
+		for (var i=0; i<arr.length; i++)
+		{
+			if(arr[i]) arr[i].setVisible(true);
+		}
+
+		var curr = 0;
+
+		var button = document.getElementById("show_objects");
+		button.onclick = function()
+		{
+			curr++;
+			curr = (curr < arr.length ? curr : 0);
+			arr[curr].bringToTop();
+		}
+
+	}
+);
+
+
+</script>
+
+</body>
+</html>

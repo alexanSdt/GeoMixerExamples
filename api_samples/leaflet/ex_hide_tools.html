@@ -1,0 +1,40 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script> 
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+<br>
+
+<input name="" type="button" id="minimize" value="Свернуть панель инструментов">
+
+
+
+<script>
+	createFlashMap(document.getElementById("map"), function(map)
+    { 
+		  map.setMode("map"); //режим просмотра карты
+		  if(map.miniMap) map.miniMap.setVisible(false); //отключить миникарту
+		  if(map.drawing) {
+			  map.drawing.tools["POINT"].setVisible(false); // отключить инструмент маркеров
+			  map.drawing.tools["POLYGON"].setVisible(false); // отключить инструмент рисования полигонов
+			  map.drawing.tools["LINESTRING"].setVisible(false); // отключить инструмент рисования линий и измерения расстояний
+			  map.drawing.tools["FRAME"].setVisible(false); // отключить инструмент ножницы
+		  }
+		  map.coordinates.setVisible(false); // отключить координаты
+		  //map.zoomControl.setVisible(false); //отключить масштабную линейку
+		  map.baseLayerControl.setVisible(false);  //отключить список базовых слоев
+		  
+		  map.scaleBar.setVisible(false); // отключить масштабную шкалу
+		  document.getElementById("minimize").onclick = function()
+			{
+				map.minimizeTools();
+			}
+   });
+</script>
+</body>
+</html>
