@@ -1,0 +1,39 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script> 
+</head>
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div>
+<script>
+
+var div = document.getElementById("map");
+createFlashMap(div, function(map)
+{
+	if(map.miniMap) map.miniMap.setVisible(false);
+	map.allControls.setVisible(false);
+
+	var plus = document.createElement("button");
+	plus.innerHTML = "+";
+	plus.style.fontSize = "15px";
+	plus.style.position = "absolute";
+	plus.style.top = "10px";
+	plus.style.left = "10px";
+	plus.onclick = function() {
+		map.slideTo(map.getX(), map.getY(), map.getZ() + 1);
+	}
+	div.appendChild(plus);
+
+	var minus = document.createElement("button");
+	minus.innerHTML = "-";
+	minus.style.fontSize = "15px";
+	minus.style.position = "absolute";
+	minus.style.top = "10px";
+	minus.style.left = "50px";
+	minus.onclick = function() { map.slideTo(map.getX(), map.getY(), map.getZ() - 1); }
+	div.appendChild(minus);
+});
+
+</script>
+</body>
+</html>

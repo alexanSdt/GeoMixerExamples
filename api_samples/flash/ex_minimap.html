@@ -1,0 +1,48 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/api.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script> 
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<button id="button2">Закрыть миникарту</button><button id="button1">Открыть миникарту</button>
+<br/>
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+<br/>
+
+
+<script>
+	createFlashMap(document.getElementById("map"), function(map)
+	{
+		map.moveTo(44.340806, 53.225797, 10);
+
+		map.setMode("map"); //режим просмотра карты
+		if(map.miniMap) {		// проверка наличия miniMap в сборке API 
+			map.miniMap.addLayer(map.layers["БазовоеПокрытиеАПИ"]); //задать имя слоя из слоев данной карты для отображение на миникарте
+		}
+		map.drawing.tools["POINT"].setVisible(false); // отключить инструмент маркеров
+		map.drawing.tools["POLYGON"].setVisible(false); // отключить инструмент рисования полигонов
+		map.drawing.tools["LINESTRING"].setVisible(false); // отключить инструмент рисования линий и измерения расстояний
+		map.drawing.tools["FRAME"].setVisible(false); // отключить инструмент ножницы
+		map.coordinates.setVisible(false); // отключить координаты
+		map.scaleBar.setVisible(false); // отключить масштабную шкалу
+
+		document.getElementById("button1").onclick = function()
+		{
+			if(map.miniMap) {					// проверка наличия miniMap в сборке API 
+				map.miniMap.setOpen(true); 		// развернуть миникарту
+			}
+		}
+
+		document.getElementById("button2").onclick = function()
+		{
+			if(map.miniMap) {					// проверка наличия miniMap в сборке API 
+				map.miniMap.setOpen(false); 	// свернуть миникарту
+			}
+		}
+   	}
+   );
+</script>
+</body>
+</html>

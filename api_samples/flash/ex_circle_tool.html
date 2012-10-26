@@ -1,0 +1,86 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/api.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script> 
+</head>
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div>
+<script>
+
+createFlashMap(document.getElementById("map"), function(map)
+{
+	map.moveToCoordinates("59.299939 N, 37.529297 E", 4);
+
+	var circle = null;
+	var cx = null;
+	var cy = null;
+
+	var onCancelCircle = function()
+	{
+		map.unfreeze();
+		map.setHandlers({ onMouseDown: null, onMouseMove: null, onMouseUp: null });
+		if(circle) circle.setHandlers({ onMouseDown: null });
+		gmxAPI._tools.standart.selectTool('move');
+	};
+
+	var onClickCircle = function()
+	{
+		map.freeze();
+
+		if(!cx) cx = map.getMouseX();
+		if(!cy) cy = map.getMouseY();
+
+		if(!circle) {
+			circle = map.addObject();
+			circle.setStyle(
+				{ outline: { color: 0x0000ff, thickness: 2 } },
+				{ outline: { color: 0x0000ff, thickness: 3 } }
+			);
+			//circle.setHandler("onClick", function() { circle.remove(); });
+		}
+
+		circle.setHandler("onMouseDown", function()
+		{
+			onClickCircle();
+		});
+
+		var radius = map.addObject();
+		radius.setStyle({ outline: { color: 0x0000ff, thickness: 1 } });
+
+		map.setHandler("onMouseMove", function()
+		{
+			var x = map.getMouseX();
+			var y = map.getMouseY();
+			circle.setCircle(cx, cy, distVincenty(cx, cy, x, y));
+			radius.setLine([cx, cy, x, y]);
+		});
+
+		map.setHandler("onMouseUp", function()
+		{
+			onCancelCircle();
+			radius.setVisible(false);
+		});
+	};
+	var setOnClickCircle = function()
+	{
+		map.setHandler("onMouseDown", onClickCircle);
+	}
+	
+	var circleTool = {
+		'key': "circle",
+		'activeStyle': { },
+		'regularStyle': { 'paddingLeft': '2px' },
+		'regularImageUrl': "http://maps.kosmosnimki.ru/api/img/radius_tool.png",
+		'activeImageUrl': "http://maps.kosmosnimki.ru/api/img/radius_tool_a.png",
+		'onClick': setOnClickCircle,
+		'onCancel': onCancelCircle,
+		'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Окружность", "Circle")
+	};
+
+	gmxAPI._tools.standart.addTool( 'circle', circleTool);
+
+});
+
+</script>
+</body>
+</html>
