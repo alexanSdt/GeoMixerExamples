@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script>
+<title>GeoMixer API - пример работы с видимостью объекта на карте</title>
+</head>
+
+<body>
+
+<button id="button2">Изменить видимость обьекта</button>
+<button id="button3">Получить видимость обьекта</button> <span id="result3"></span>
+<br/>
+<div id="map" style="width: 1024px; height: 660px; overflow:hidden;"></div>
+	<script>
+
+		createFlashMap(document.getElementById("map"), function(map)
+		{
+			map.moveTo(80.41, 64.79, 5);//позиционирует карту по координатам центра и выбирает масштаб
+
+			var testObj = null;
+			var flagvisible = true;
+
+			document.getElementById("button3").onclick = function() {
+				if(testObj) {
+					var res = testObj.getVisibility();						// Получить видимость обьекта
+					document.getElementById("result3").innerHTML = res;
+				}
+			}
+
+			document.getElementById("button2").onclick = function() {
+				flagvisible = !flagvisible;
+				if(testObj) {
+					testObj.setVisible(flagvisible);						// Изменить видимость обьекта
+				}
+			}
+
+			var markers = map.addObject();
+			markers.setStyle({
+				outline: { color: 0xff0000, thickness: 1, opacity: 90 },
+				fill: { color: 0x0000ff, opacity: 80 }
+			});
+
+			var testObj = markers.addObject({	type: "POLYGON", coordinates: 
+				[[[80.41, 64.79],
+					[85.41, 64.79],
+					[85.41, 67.79],
+					[80.41, 67.79],
+					[80.41, 64.79]]]}
+			); // рисуем полигональный пользовательский объект
+
+		});
+	</script>
+</body>
+</html>

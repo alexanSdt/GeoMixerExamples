@@ -1,0 +1,57 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/api.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script>
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<div id="map" style="width: 850px; height: 600px; overflow:hidden;"></div> <!--задаем контейнер, в который загружается карта -->
+<br/>
+<script>
+      createFlashMap(document.getElementById("map"), "7VKHM", function(map) //загружает выборочную карту с того хоста, на котором лежит api.js
+		{
+			map.moveTo(37.599248, 55.770440, 15);//позиционирует карту по координатам центра и выбирает масштаб
+
+			map.layers["АЗС"].setVisible(true);
+			map.layers["АЗС"].enableHoverBalloon(function(o) { return "<div style='font-size:11px; color: #213570; font-family:sans-serif;'>" + o.properties.NAME + "<br/>" + o.properties.ADDRESS + "<br/>" + o.properties.TELEPHONE; + "</div>"}); //выбирает поля для отображения их значений в балуне
+			map.layers["выходы метро"].setVisible(true);
+			map.layers["выходы метро"].enableHoverBalloon(function(o) { return "<div style='font-size:11px; color: #213570; font-family:sans-serif;'>" + o.properties.TEXT + "</div>"}); 
+			map.layers["roadblocks_z15"].setVisible(true);
+			map.layers["roadblocks_z15"].enableHoverBalloon(function(o) { return "<b style='font-size:11px; color: red; font-family:sans-serif;'>ПРОЕЗД ЗАПРЕЩЕН</b>";}); 
+
+			map.miniMap.setVisible(false);
+			map.minimizeTools();
+			map.coordinates.setVisible(false);
+			map.scaleBar.setVisible(false);
+
+			var marker = map.addObject();
+			marker.setPoint(37.595451, 55.769710); 
+			marker.setStyle({marker: {image: "http://kosmosnimki.ru/img/blau_knopka.png", center: true}});
+		  //добавляет объект маркер на карту
+		  
+		  var balloon = false;
+
+				marker.setHandler("onClick", function(obj)
+				{
+					if (!balloon)
+					{
+						var coords = obj.getGeometry().coordinates;
+						balloon = map.addBalloon();
+						balloon.setPoint(coords[0], coords[1]);
+						balloon.div.innerHTML = '<object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/LEm6Lu04Pck&hl=ru_RU&fs=1&rel=0"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/LEm6Lu04Pck&hl=ru_RU&fs=1&rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>';
+						balloon.resize();
+					}
+					else
+					{
+						balloon.remove();
+						balloon = false;
+					}
+				});
+				//навешивает на маркер балун со встроенным HTML
+
+		});
+	  
+</script>
+</body>
+</html>
