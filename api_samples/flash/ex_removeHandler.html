@@ -1,0 +1,58 @@
+<html>
+<head>
+<script src="http://maps.kosmosnimki.ru/api/api.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GeoMixer API - примеры использования</title>
+
+</head>
+
+<body>
+<button id="add_event">Добавить событие onClick</button>
+<button id="remove_event">Удалить событие onClick</button>
+<div id="map" style="width: 1000px; height: 650px;"></div> <!--задаем контейнер, в который загружается карта -->
+<br/>
+
+<script> 
+      	createFlashMap(document.getElementById("map"),function(map)
+	{
+		map.moveTo(160.63333,56.06666666,3);
+
+		var marker = map.addObject();
+		marker.setPoint(160.63333, 56.06666666); 
+		marker.setStyle({marker: {image: "../data/img/blau_knopka.png", center: true}});
+		  
+
+		var addButton = document.getElementById("add_event");
+		addButton.onclick = function()
+		{
+			var balloon = false;
+
+			marker.setHandler("onClick", function(obj)
+			{
+				if (!balloon || !balloon.isVisible)
+				{
+					var coords = obj.getGeometry().coordinates;
+					balloon = map.addBalloon();
+					balloon.setPoint(coords[0], coords[1]);
+					balloon.div.innerHTML = "<table style='width:550px;'><tbody><tr><td vAlign=\"top\" style=\"width:300px;height: 200px;\"><strong>Ключевская сопка</strong> — действующий вулкан на востоке Камчатки, наиболее высокий (5 000 м) активный вулкан в Евразии. Возраст вулкана приблизительно 7 000 лет. <a href=\"http://ru.wikipedia.org/wiki/%D0%9A%D0%BB%D1%8E%D1%87%D0%B5%D0%B2%D1%81%D0%BA%D0%B0%D1%8F_%D1%81%D0%BE%D0%BF%D0%BA%D0%B0\">Статья в Википедии</a></td><td vAlign=\"top\" style=\"width:250px;\"><img width=\"250\" height=\"162\" src=\"../data/img/Klyuchevskoi.jpg\"/></td></tr></tbody></table>";
+					balloon.resize();
+				}
+				else
+				{
+					balloon.remove();
+					balloon = false;
+				}
+			});
+		}
+
+		var removeButton = document.getElementById("remove_event");
+		removeButton.onclick = function()
+		{
+			marker.removeHandler("onClick");
+		}
+
+	});
+</script> 
+
+</body>
+</html>

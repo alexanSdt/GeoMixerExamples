@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script>
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+
+
+<script>
+      createFlashMap(document.getElementById("map"), "7VKHM",		function(map)
+		{
+			map.moveTo(37.620888, 55.762624, 12);		
+			var myLayer = map.layers["POI_museums_web"];
+			myLayer.setVisible(true);
+
+			myLayer.enableHoverBalloon(function(f) {return "Перейти на страницу сайта музея"})
+			myLayer.setHandler("onClick", function(o)
+			{
+				window.location.href = o.properties["WEB"];
+			});
+		});
+
+</script>
+
+</body>
+</html>
