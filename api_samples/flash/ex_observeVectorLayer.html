@@ -20,25 +20,49 @@
 		map.moveTo(17.427919, 53.354861, 7);
 
 		var myLayer = map.layers["АЗС"];
-		myLayer.setVisible(true);
 		var observerLayer = myLayer.addObject();
 
-		document.getElementById("button").onclick = function()
+		//document.getElementById("button").onclick = function()
 		{
+			var redrawTimer = null;										// Таймер
+			var cnt = 1;
+			var addItems = [];
+			var delItems = [];
+			var waitMe = function()
+			{
+				var out = '\n Добавлено ' + addItems.length;
+				out += ' удалено ' + delItems.length;
+				out += ' номер вызова ' + cnt;
+				
+				var old = document.getElementById("res").innerHTML;
+				document.getElementById("res").innerHTML = out + old;
+				out = '';
+				cnt++;
+				addItems = [];
+				delItems = [];
+			}
 			var callback = function(hash, flag)
 			{
-				var old = document.getElementById("res").innerHTML;
-				var geom = hash.geometry;	 			// геометрия обьекта
-				var prop = hash.properties;	 			// properties обьекта
-				var layer = hash.layer;	 				// Векторный слой которому принадлежит полученный обьект
-				var st = '\n' + (flag ? '' : ' не ') + ' виден';
-				st += ' ogc_fid: ' + prop['ogc_fid'];
-				//st += ' из слоя ' layer.properties['title'];
-				document.getElementById("res").innerHTML = st + old;
+				if(flag) addItems.push(hash);
+				else delItems.push(hash);
+				if(redrawTimer) clearTimeout(redrawTimer);
+				redrawTimer = setTimeout(waitMe, 0);
+				
 			}
 			observerLayer.observeVectorLayer(myLayer, callback);
 		}
+		myLayer.setVisible(true);
 	});
+	/*
+				//var old = document.getElementById("res").innerHTML;
+				var geom = hash.geometry;	 			// геометрия обьекта
+				var prop = hash.properties;	 			// properties обьекта
+				var layer = hash.layer;	 				// Векторный слой которому принадлежит полученный обьект
+				out += '\n' + (flag ? '' : ' не ') + ' виден';
+				out += ' ogc_fid: ' + prop['ogc_fid'];
+				//st += ' из слоя ' layer.properties['title'];
+				//document.getElementById("res").innerHTML = out + old;
+	*/
 </script> 
 
 </body>
