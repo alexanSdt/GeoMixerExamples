@@ -1,0 +1,45 @@
+<html>
+<head>
+<script src="http://maps.kosmosnimki.ru/api/api.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GeoMixer API - примеры использования</title>
+
+</head>
+
+<body>
+<div id="map_container" style="width: 800px; height: 650px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div style="">
+	<button id="button">Получать видмость обьектов векторного слоя</button>
+	<br/>
+	<textarea id="res" style="width: 500px; height: 200px;"></textarea>
+</div>
+
+<script> 
+	createFlashMap(document.getElementById("map_container"), "maps.kosmosnimki.ru", "7VKHM", function(map)
+	{
+		map.moveTo(17.427919, 53.354861, 7);
+
+		var myLayer = map.layers["АЗС"];
+		myLayer.setVisible(true);
+		var observerLayer = myLayer.addObject();
+
+		document.getElementById("button").onclick = function()
+		{
+			var callback = function(hash, flag)
+			{
+				var old = document.getElementById("res").innerHTML;
+				var geom = hash.geometry;	 			// геометрия обьекта
+				var prop = hash.properties;	 			// properties обьекта
+				var layer = hash.layer;	 				// Векторный слой которому принадлежит полученный обьект
+				var st = '\n' + (flag ? '' : ' не ') + ' виден';
+				st += ' ogc_fid: ' + prop['ogc_fid'];
+				//st += ' из слоя ' layer.properties['title'];
+				document.getElementById("res").innerHTML = st + old;
+			}
+			observerLayer.observeVectorLayer(myLayer, callback);
+		}
+	});
+</script> 
+
+</body>
+</html>
