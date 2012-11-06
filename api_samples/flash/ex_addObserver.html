@@ -28,11 +28,11 @@
 			var delCount = 0;
 			for (var i = 0; i < arr.length; i++) {
 				var pt = arr[i];
-				var isView = pt.isView;	 			// true - стал виден иначе стал не виден
-				var geom = pt.item.geometry;	 			// геометрия обьекта
-				var prop = pt.item.properties;	 			// properties обьекта
-				var layer = pt.item.layer;	 				// Векторный слой которому принадлежит полученный обьект
-				if(isView) addCount++;
+				var onExtent = pt.onExtent;	 			// true - стал виден иначе стал не виден
+									//var geom = pt.item.geometry;	 			// геометрия обьекта
+									//var prop = pt.item.properties;	 		// properties обьекта
+									//var layer = pt.item.layer;	 			// Векторный слой которому принадлежит полученный обьект
+				if(onExtent) addCount++;
 				else delCount++;
 			}
 			var out = '\n Добавлено ' + addCount;
