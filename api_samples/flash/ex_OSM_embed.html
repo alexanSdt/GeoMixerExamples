@@ -1,0 +1,47 @@
+<html>
+<head>
+<script src="http://maps.kosmosnimki.ru/api/api.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GeoMixer API - примеры использования</title>
+
+</head>
+
+<body>
+<button id="button">Показать OSM вставки</button>
+<br/>
+<div id="map_container" style="width: 800px; height: 650px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+
+<script> 
+	createFlashMap(document.getElementById("map_container"), "maps.kosmosnimki.ru", "7VKHM", function(map)
+	{
+		map.moveTo(27.528937, 53.878142, 10);
+		var myLayer = map.layers["OSM_embed"];
+		
+		document.getElementById("button").onclick = function()
+		{
+			myLayer.setVisible(true);
+			var setOSMEmbed = function(layer)
+			{
+				layer.enableTiledQuicklooksEx(function(o, image)
+				{
+					image.setTiles(function(i, j, z)
+					{
+						//return "http://osm.kosmosnimki.ru/kosmo/" + z + "/" + (i + Math.pow(2, z - 1)) + "/" + (Math.pow(2, z - 1) - j - 1) + ".png";
+						var size = Math.pow(2, z - 1);
+						i += size;
+						j = size - j - 1;
+						var letter = ["a", "b", "c", "d"][((i + j)%4 + 4)%4];
+						return "http://" + letter + ".tile.osmosnimki.ru/kosmo" + gmxAPI.KOSMOSNIMKI_LOCALIZED("", "-en") + "/" + z + "/" + i + "/" + j + ".png";
+					}, 1);
+					image.setZoomBounds(parseInt(o.properties["text"]), 18);
+				}, 10, 18);
+			}
+			
+			setOSMEmbed(myLayer);
+			myLayer.setAsBaseLayer("Карта");
+		}
+	});
+</script> 
+
+</body>
+</html>
