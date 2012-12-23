@@ -1,7 +1,7 @@
 <html>
 <head>
-<script src="http://maps.kosmosnimki.ru/api/apil.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script> 
 <title>GeoMixer API - примеры использования</title>
 
 </head>
@@ -18,8 +18,8 @@
 <script> 
 	createFlashMap(document.getElementById("map_container"), "maps.kosmosnimki.ru", "7VKHM", function(map)
 	{
-		map.moveTo(17.427919, 53.354861, 7);
-		var myLayer = map.layers["АЗС"];
+		map.moveTo(37.548522, 55.493255, 9);
+		var myLayer = map.layers['карта Rumap'];
 		myLayer.setVisible(true);
 		
 		var callback = function(arr)
@@ -48,6 +48,7 @@
 		document.getElementById("button1").onclick = function()
 		{
 			myLayer.setVisibilityFilter('"ogc_fid" = -1');
+			//myLayer.addObserver(callback, {'asArray':true});
 			myLayer.addObserver(callback, {'asArray':true, 'ignoreVisibilityFilter':true});
 		}
 	});
