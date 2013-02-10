@@ -1,0 +1,111 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://localhost/api/apil.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script> 
+
+<title>GeoMixer API - примеры использования</title>
+</head>
+<body>
+<button id="show_objects">Получить объекты векторного слоя</button>
+<button id="show_layer">Показать слой</button>
+<br />
+<table><tbody><tr>
+	<td style="vertical-align: top;">
+		<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+	</td>
+	<td valign="top">
+		<div id="result"></div>
+	</td>
+</tr></tbody></table>
+<script>
+
+var div = document.getElementById('map');
+
+createFlashMap(div, 'maps.kosmosnimki.ru', "UIRCQ",
+	function (map) 
+	{
+		map.moveTo(48.109130, 46.660157, 8);
+		map.setBaseLayer("Карта");
+		map.baseLayerControl.setVisible(false);
+		
+		map.drawing.tools["zoom"].setVisible(false);
+		map.drawing.tools["POINT"].setVisible(false);
+		map.drawing.tools["LINESTRING"].setVisible(false);
+		map.drawing.tools["POLYGON"].setVisible(false);
+		map.drawing.tools["zoom"].setVisible(true);
+
+		var myLayer = map.layers['Съёмка'];
+		//myLayer.setVisible(true);
+		var identityField = gmxAPI.getIdentityField(myLayer);
+
+		var currentFrame = false;
+		map.drawing.setHandlers({
+			onAdd: function(o)
+			{
+				if (currentFrame)
+					currentFrame.remove();
+					currentFrame = o;
+			}
+		});
+
+		myLayer.enableHoverBalloon(function(o) // выбор слоя карты по его названию
+		{ 
+			return o.properties["NAME"]; 
+		});
+		document.getElementById("show_layer").onclick = function()
+		{
+			myLayer.setVisible(true);
+		}
+		var dt1 = new Date('12/16/2012');
+		var d1 = Math.floor(dt1.getTime() / 1000 - dt1.getTimezoneOffset()*60);
+		var dt2 = new Date('12/17/2012');
+		var d2 = Math.floor(dt2.getTime() / 1000 - dt2.getTimezoneOffset()*60);
+		var f = '"unixTimeStamp" >= ' + d1 + ' AND "unixTimeStamp" <= ' + d2;
+		
+		for (var i = 0; i < myLayer.filters.length; i++) {
+			myLayer.setVisibilityFilter(f);
+			//myLayer.filters[i].setFilter(f);
+		}
+
+		var button = document.getElementById("show_objects");
+		button.onclick = function()
+		{
+			/*myLayer.getFeatures( 
+			//myLayer.getFeaturesTemporal( 
+				function(features) 
+				{
+					var names = [];
+					for (var i = 0; i < features.length; i++)
+					{
+						var f = features[i];
+						var out = identityField + ': <b>' + f.properties[identityField] + "</b>" + (f.properties['NAME'] ? ' <b>' + f.properties['NAME'] + "</b>" : '');
+						var geo = f.getGeometry();
+						if(geo.type == 'POINT') {
+							var c = geo.coordinates;
+							out += " (" + c[0] + ", " + c[1] + ")";
+						}
+						names.push(out);
+					}
+					var str = 'Слой: <b>' + myLayer.properties.title + '</b><br>';
+					str += (names.length ? names.join("<br>") : 'Обьектов не обнаружено');
+					//alert(str);
+					document.getElementById("result").innerHTML = str;
+				},
+				currentFrame ? currentFrame.geometry : map.getScreenGeometry() // запрашивать объекты по экстенту окна карты
+			);*/
+			var callback = function(arr)
+			{
+console.log('addObserver ' , arr.length);
+			}
+			myLayer.addObserver(callback, {'ignoreVisibilityFilter':true});
+			myLayer.setDateInterval(new Date('01/01/1980'), new Date());
+/*
+*/
+		}
+	}
+);
+
+</script>
+
+</body>
+</html>

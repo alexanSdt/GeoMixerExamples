@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link rel="stylesheet" type="text/css" href="http://maps.kosmosnimki.ru/api/jquery/jquery-ui-1.7.2.custom.css">
+	<link rel="stylesheet" type="text/css" href="http://maps.kosmosnimki.ru/api/common.css"> 
+	<link rel="stylesheet" type="text/css" href="http://maps.kosmosnimki.ru/api/treeview.css">
+	<link rel="stylesheet" type="text/css" href="http://maps.kosmosnimki.ru/api/buttons.css">
+	<link rel="stylesheet" type="text/css" href="http://maps.kosmosnimki.ru/api/search.css">
+	<link rel="stylesheet" type="text/css" href="http://maps.kosmosnimki.ru/api/menu.css">
+    <link rel="stylesheet" href="http://kosmosnimki.ru/demo/test-routes/routerform.css"/>
+
+	<script src="http://maps.kosmosnimki.ru/api/jquery/jquery-1.5.1.min.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/jquery/jquery-ui-1.8.10.custom.min.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/jquery/jquery.treeview.js"></script>
+
+	<script src="http://maps.kosmosnimki.ru/api/gmxCore.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/utilities.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/translations.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/lang_ru.js"></script>
+
+	<script src="http://maps.kosmosnimki.ru/api/menu.js"></script>
+
+    <script src="http://kosmosnimki.ru/demo/test-routes/router.js" charset="utf-8"></script>
+    <script src="http://kosmosnimki.ru/demo/test-routes/routerform.js" charset="utf-8"></script>
+  
+
+    <script src="http://localhost/api/apil.js?key=56AAB7DB8B06FE39BDB3FDCA7276302B" charset="windows-1251"></script>     
+  
+
+<title>GeoMixer API - прокладка маршрута</title>
+</head>
+<body>
+<div id="searchInput"></div>
+
+<div id="leftColumn" style="position:absolute; width: 285px;"> 
+    <div id="leftContent"></div>
+    <div id="routerForm"></div>
+    <center><img src = "http://osm2.kosmosnimki.ru/test-routes/icon/82.gif" style = "display:none;" id = "router_progress_img" / ></center>
+    <div id="waypoints"></div>
+</div>
+<div id="map"></div>
+
+<script type="text/javascript">
+
+    createFlashMap($('#map')[0], function (map) {
+
+        $('#leftColumn').css('overflow-y', 'scroll');
+
+        var resizeMap = function () {
+            var w = $(window).width()
+            var h = $(window).height()
+            $('#map').css('width', w - 320)
+            $('#map').css('top', 3)
+            $('#map').css('height', h - 50)
+            if (oldOnResize) oldOnResize();
+        }
+        resizeMap()
+        var oldOnResize = window.onresize;
+        window.onresize = resizeMap;
+
+        var onresize = function () {
+            $('#leftColumn').css('top', 35)
+            $('#leftColumn').css('height', $(window).height() - 50)
+            if (oldonresize) oldonresize()
+        }
+        onresize();
+        var oldonresize = window.onresize;
+        window.onresize = onresize;
+       
+        map.checkMapSize()
+ 
+        var tool = new router.map.Tool(map);
+        var form = new router.form.RouteForm(map, tool);
+        form.input($('#routerForm'));
+        form.output($('#waypoints'));
+        form.provider(tool, tool.provider);
+        form.vehicle(tool, tool.vehicle);
+
+        // ROUTER FORM AUTOCOMPLETE INPUTS
+
+        if (gmxCore.getModule("search") === null)
+            gmxCore.loadModule("search", "http://maps.kosmosnimki.ru/api/search.js");
+
+        gmxCore.addModulesCallback(["search"], function () {
+            var oSearchModule = gmxCore.getModule("search");
+            var oLogic = new oSearchModule.SearchLogicGet(
+            "http://maps.kosmosnimki.ru/", //ServerBase
+            form.map, false);
+            var params = {
+                ImagesHost: "http://maps.kosmosnimki.ru/api/img",
+                layersSearchFlag: false,
+                AutoCompleteSource: function (request, response) {
+                    oLogic.AutoCompleteData(request.term, response)
+                }
+            };
+            form.createSearchInput = function (container) {
+                return new oSearchModule.SearchInput(container, params);
+            };
+            form.showSearchInputs();
+
+            // SEARCH FORM AND RESULTS LIST
+
+            var oSearchControl = new oSearchModule.SearchGeomixer();
+            var oMenu = new leftMenu();
+            //_menuUp.addItem(
+            //{id:"viewMenu", title:_gtxt("Вид"),childs:
+            //[{id:'search', title:_gtxt('Результаты поиска'), onsel: oSearchControl.Load,onunsel:oSearchControl.Unload}]}); 
+            oSearchControl.Init({
+                Menu: oMenu,
+                ContainerInput: document.getElementById("searchInput"), //document.getElementById('searchCanvas'),
+                ContainerList: document.getElementById("leftContent"),
+                ServerBase: "http://maps.kosmosnimki.ru/", //globalFlashMap.geoSearchAPIRoot, //
+                ImagesHost: "http://maps.kosmosnimki.ru/api/img",
+                layersSearchFlag: false,
+                mapHelper: null,
+                Map: map
+            });
+        }); 
+
+        map.moveToCoordinates("55.752122 N, 37.624397 E", 13);
+        setTimeout(function () {
+            //$('#route_start_text input').val('москва')
+            //$('#route_end_text input').val('тамбов')
+            $('#route_start_text input').val('улица Бауманская, Москва')
+            $('#route_end_text input').val('улица Снайперская, Москва')
+            $('#route_start_text input').change()
+            $('#route_end_text input').change()
+        }, 1000);
+
+    });
+</script>
+
+</body></html>
