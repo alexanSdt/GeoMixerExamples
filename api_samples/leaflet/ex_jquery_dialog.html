@@ -43,7 +43,7 @@
 				var $div = $(ph['innerHTML']);
 				$div.dialog({title: "Тестовый диалог", zIndex: 3999, width: ph['width'], height: ph['height'], close: function(){
 					$div.dialog("destroy");
-					$div.get(0).removeNode(true);
+					//$div.get(0).removeNode(true);
 				}});
 				$div.get(0).style.width = "100%";
 			})

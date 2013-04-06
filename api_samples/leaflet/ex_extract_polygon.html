@@ -1,0 +1,62 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="http://maps.kosmosnimki.ru/api/apil.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script> <!-- api-ключ для доступа к сервису API, полученный на account.kosmosnimki.ru для сайта kosmosnimki.ru, на котором размещена данная веб-страница --><!-- ВНИМАНИЕ! ДЛЯ ТЕСТИРОВАНИЯ С ЛОКАЛЬНОГО ДИСКА ИСПОЛЬЗУЙТЕ LOCALHOST -->
+
+<title>GeoMixer API - примеры использования</title>
+</head>
+<body>
+<div id="map" style="width: 600px; height: 400px;"></div>
+<br />
+<button id="show_objects">Показать список объектов в видимой области (либо по отмеченному контуру)</button>
+<script>
+
+var div = document.getElementById('map');
+
+createFlashMap(div, "7VKHM", function (map) 
+	{
+		map.moveTo(44.461, 55.651, 6);
+		var myLayer = map.layers["Границы_заповедников"];
+		myLayer.setVisible(true);
+		map.drawing.tools["move"].setVisible(false);
+		map.drawing.tools["zoom"].setVisible(false);
+		map.drawing.tools["POINT"].setVisible(false);
+		map.drawing.tools["LINESTRING"].setVisible(false);
+
+		var currentFrame = false;
+		map.drawing.setHandlers({
+			onAdd: function(o)
+			{
+				if (currentFrame)
+					currentFrame.remove();
+					currentFrame = o;
+			}
+		});
+
+		var button = document.getElementById("show_objects");
+		button.onclick = function()
+		{
+			var geo = map.getScreenGeometry();
+			myLayer.getFeatures( 
+				function(features) 
+				{
+					var names = [];
+					for (var i = 0; i < features.length; i++)
+					{
+						var f = features[i];
+						var c = f.getGeometry().coordinates;
+						names.push(f.properties["Name_ru"] +" ");
+					}
+					alert(names.join("\n"));
+				},
+				currentFrame ? currentFrame.geometry : geo // запрашивать объекты по экстенту окна карты
+			);
+		}
+	}
+);
+
+
+</script>
+
+</body>
+</html>

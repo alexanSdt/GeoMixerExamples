@@ -26,19 +26,21 @@
 			// Пример вкладки OSM с переключением подложки на satellite 
 			var over1 = null;	
 			var onClickOver1 = function() {
-				var mode = 'map';
+				var mode = 'satellite';
 				if(!over1) {
-					over1 = gmxAPI.map.addObject();
+					over1 = gmxAPI.map.addObject(null, null, {'zIndexOffset': 25000});
 					over1.setBackgroundTiles(function(i, j, z)
 					{
 						var letter = ["a", "b", "c", "d"][((i + j)%4 + 4)%4];
 						var size = Math.pow(2, z - 1);
 						return "http://" + letter + ".tile.osmosnimki.ru/hyb/" + z + "/" + (i + size) + "/" + (size - j - 1) + ".png";
 					}, 1);
-					mode = 'satellite';
+					gmxAPI.map.addListener('baseLayerSelected', function(attr){
+						var flag = map.isModeSelected(mode) && overlaysTools.activeToolName == 'Overlay1';
+						over1.setVisible(flag);
+					});
 				} else {
 					over1.setVisible(!over1.isVisible);
-					mode = (over1.isVisible ? 'satellite':'map');
 				}
 				if(over1.isVisible) map.setMode(mode);
 			};
