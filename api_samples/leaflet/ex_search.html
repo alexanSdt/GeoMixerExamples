@@ -1,0 +1,55 @@
+<html>
+<head>
+<script src="http://maps.kosmosnimki.ru/api/apil.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset=windows-1251></script> <!-- api-ключ для доступа к сервису API, полученный на account.kosmosnimki.ru для сайта kosmosnimki.ru, на котором размещена данная веб-страница --><!-- ВНИМАНИЕ! ДЛЯ ТЕСТИРОВАНИЯ С ЛОКАЛЬНОГО ДИСКА ИСПОЛЬЗУЙТЕ LOCALHOST -->
+
+<meta http-equiv="Content-Type" content="text/html;  charset=utf-8" />
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<p><input name="search2" style="width:400px" id="search_string2" type="text" value="Москва">&nbsp;&nbsp;<input id="search_button2" value="Поиск" type="submit"></p>
+  <div id="map2" style="width: 600px; height: 450px;"></div><br/>
+
+<script>
+
+	createFlashMap(document.getElementById("map2"), function(map)
+	{
+		map.moveTo(46, 60, 3);
+		var markers = [];
+		document.getElementById("search_button2").onclick = function()
+		{
+			map.sendSearchRequest(document.getElementById("search_string2").value, 
+			function(results) 
+			{
+				for (var i = 0; i < markers.length; i++)
+					markers[i].remove();
+				markers = [];
+
+				for (var key in results)
+				{
+					for (var j in results[key]) (function(o)
+					{
+						var obj = map.addObject({ type: "POINT", coordinates: [o.CntrLon, o.CntrLat] });
+						obj.setStyle(
+							{ marker: { image: "http://maps.kosmosnimki.ru/api/img/marker_flag.png", center: true } }, // выбирает картинку для отображения метки
+							{ marker: { image: "http://maps.kosmosnimki.ru/api/img/marker_flag_a.png", center: true } }
+						);
+						markers.push(obj);
+                        			obj.enableHoverBalloon(function() 
+						{
+							var parts = [];
+							for (var i = o.Path.length - 1; i >= 0; i--)
+								parts.push(o.Path[i].join(" "));
+							return parts.join("<br />");
+						});
+					})(results[key][j]);
+				}
+				if (markers.length == 0)
+					alert("Ничего не найдено!");
+			});
+		}
+	});
+
+</script>
+</body>
+</html>
