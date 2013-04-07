@@ -1,0 +1,76 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script> 
+</head>
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div>
+<script>
+
+createFlashMap(document.getElementById("map"), function(map)
+{
+	map.moveToCoordinates("59.299939 N, 37.529297 E", 4);
+
+	var mouseDown = false;
+	var circle = null;
+	var radius = null;
+	var cx = null;
+	var cy = null;
+
+	var onCancelCircle = function()
+	{
+		map.disableDragging();
+		gmxAPI._tools.standart.selectTool('move');
+		if(radius) radius.setVisible(false);
+		mouseDown = false;
+	};
+
+	var drag = function(x, y)
+	{
+		if(mouseDown) {
+			radius.setVisible(true);
+			circle.setCircle(cx, cy, distVincenty(cx, cy, x, y));
+			radius.setLine([cx, cy, x, y]);
+		}
+	}
+	var down = function(x, y)
+	{
+		mouseDown = true;
+		if(!cx) cx = x;
+		if(!cy) cy = y;
+
+		if(!circle) {
+			circle = map.addObject();
+			circle.setStyle(
+				{ outline: { color: 0x0000ff, thickness: 2 } },
+				{ outline: { color: 0x0000ff, thickness: 3 } }
+			);
+		}
+		if(!radius) {
+			radius = map.addObject();
+			radius.setStyle({ outline: { color: 0x0000ff, thickness: 1 } });
+		}
+	}
+	var setOnClickCircle = function()
+	{
+		map.enableDragging(drag, down, onCancelCircle);
+	}
+	
+	var circleTool = {
+		'key': "circle",
+		'activeStyle': { },
+		'regularStyle': { 'paddingLeft': '2px' },
+		'regularImageUrl': "http://maps.kosmosnimki.ru/api/img/radius_tool.png",
+		'activeImageUrl': "http://maps.kosmosnimki.ru/api/img/radius_tool_a.png",
+		'onClick': setOnClickCircle,
+		'onCancel': onCancelCircle,
+		'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Окружность", "Circle")
+	};
+
+	gmxAPI._tools.standart.addTool( 'circle', circleTool);
+
+});
+
+</script>
+</body>
+</html>
