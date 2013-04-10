@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<span>Установка  видимости обьектов при помощи слайдера </span> <span id="info"></span>
+<span>При помощи слайдера меняем фильтр видимости обьектов контейнера</span> <span id="info"></span>
 <div id="slider" style="border-image: none; border-style: solid; border-width: 1px 0 0; width: 500px; margin: 4px;;"></div>
 <br>
 <div id="map_container" style="width: 1000px; height: 700px;"></div>
@@ -40,8 +40,7 @@
 					"properties": {'ogc_fid': k, dat1: 1333000000+k, dat2: k/10}
 					,
 					"geometry": {type:'POINT', coordinates: [50+k/1, k-50]}
-					,
-					"setLabel": k
+					//,"setLabel": k
 				};
 				data.push(pt);
 			}
@@ -58,7 +57,7 @@
 			step: 1,
 			slide: function( event, ui ) {
 				cont.setVisibilityFilter('"dat1">' + (ui.value+1333000000) + ' AND "dat1"<' + (ui.value + 1333000015) );
-				$("#info").text(" " + ui.value);
+				//$("#info").text(" " + ui.value);
 				return true;
 			}
 		}
