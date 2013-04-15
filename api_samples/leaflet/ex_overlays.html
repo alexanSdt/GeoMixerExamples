@@ -86,10 +86,11 @@
 			var onClickOver3 = function() {
 				if(!over3) {
 					// описание векторного слоя
-					var layer = {"properties":{"LayerID":2517,"name":"347D90C1D6574441BBF36D2472E76C36","title":"Субъекты РФ","description":null,"type":"Vector","MinZoom":1,"MaxZoom":3,"date":"14.07.2009","Copyright":null,"Legend":null,"EncodeSource":"windows-1251","Owner":"LayerManager","MetaProperties":{},"Tags":[],"LayerVersion":1,"identityField":"ogc_fid","tiles":[-1,0,1,0,1,3,1,1,3,0,1,2,1,0,2,1,1,2],"tilesVers":[0,0,0,0,0,0],"Processing":{},"GeometryType":"polygon","attributes":["OBL_NAME","OKRUG"],"attrTypes":["string","string"],"metadata":{},"Access":"edit","styles":[{"MinZoom":4,"MaxZoom":6,"BalloonEnable":false,"DisableBalloonOnClick":true,"DisableBalloonOnMouseMove":true,"RenderStyle":{"marker":{"size":2,"center":true},"outline":{"color":15113446,"thickness":2},"label":{"field":"OBL_NAME","color":16777215,"size":15,"haloColor":4076518}}}],"visible":false},"geometry":{"type":"POLYGON","coordinates":[[[-20037507.07,5013020.24],[20037507.07,5013020.24],[20037507.07,16812349.31],[-20037507.07,16812349.31],[-20037507.07,5013020.24]]]}};
+					var layer = {"properties":{"LayerID":2517,"name":"347D90C1D6574441BBF36D2472E76C36","title":"Субъекты РФ","description":null,"type":"Vector","MinZoom":1,"MaxZoom":3,"date":"14.07.2009","Copyright":null,"Legend":null,"EncodeSource":"windows-1251","Owner":"LayerManager","MetaProperties":{},"Tags":[],"LayerVersion":1,"identityField":"ogc_fid","tiles":[-1,0,1,0,1,3,1,1,3,0,1,2,1,0,2,1,1,2],"tilesVers":[0,0,0,0,0,0],"Processing":{},"GeometryType":"polygon","attributes":["OBL_NAME","OKRUG"],"attrTypes":["string","string"],"metadata":{},"Access":"edit","styles":[{"MinZoom":4,"MaxZoom":6,"BalloonEnable":false,"DisableBalloonOnClick":true,"DisableBalloonOnMouseMove":true,"RenderStyle":{"marker":{"size":2,"center":true},"outline":{"color":15113446,"thickness":2},"label":{"field":"OBL_NAME","color":16777215,"size":15,"haloColor":4076518}}}],"visible":false},"geometry":{"type":"POLYGON","coordinates":[[[-20037507.07,5013020.24],[20037507.07,5013020.24],[20037507.07,16812349.31],[-20037507.07,16812349.31],[-20037507.07,5013020.24]]],"visible":true}};
+					
 					layer.properties.hostName = 'maps.kosmosnimki.ru';	// задать хост с которого берем слой
 					map.addLayer(layer, true);							// добавить слой
-					over3 = map.layers['347D90C1D6574441BBF36D2472E76C36'];
+					over3 = map.layers['D2422C4EE6E448A096CF210C2107BB8B'];
 				} else {
 					over3.setVisible(!over3.isVisible);
 				}
