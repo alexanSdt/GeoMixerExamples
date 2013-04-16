@@ -12,7 +12,7 @@
 		<div id="map" style="width: 500px; height: 300px;"></div>
 		</td>
 		<td width="111" height="146" align="center">
-		<button id="coordinates_button">Получить координаты</button>
+		<button id="coordinates_button">Получить геометрии обьектов</button>
 		</td>
 	</tr>
 	<tr>
@@ -47,8 +47,11 @@
 		document.getElementById("coordinates_button").onclick = function()
 		{
 			var a = [];
-			map.drawing.forEachObject(function(o) { a.push(o); }) //Выводим координаты объектов 
-			alert(JSON.stringify(a)); 
+			map.drawing.forEachObject(function(o) {
+				a.push(JSON.stringify(o.geometry));
+			}) //Выводим координаты объектов 
+			alert(a.join("\r\n")); 
+			//alert(JSON.stringify(a)); 
 		}
 
 		document.getElementById("remove_button").onclick = function() { map.drawing.forEachObject(function(o) { o.remove(); }); } //Удаляем объекты
