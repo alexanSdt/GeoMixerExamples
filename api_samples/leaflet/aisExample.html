@@ -98,6 +98,7 @@
 	var indexCurrent = null;			// индекс выбранного корабля
 	var routeObj = null;				// путь выбранного корабля
 	var balloon = null;
+	var getShipRout = null;
 	
 	var UPDATE_INTERVAL = 200;
 	var regex = /\d+/;
@@ -115,12 +116,14 @@
 			var id = item[0];
 			items[id] = item;
 		}
+		var index = 0;
 		for (var id in items) {
 			var item = items[id];
 			var unixTime = Number(regex.exec(item[4])[0]);
 			var pt = {
 				'name': item[1]
 				,'time': unixTimeToString(unixTime)
+				,'index': index
 			};
 			var geo = {
 				type: "POINT",   coordinates: [item[3], item[2]] 
@@ -130,9 +133,11 @@
 				,'propHiden': {
 					'id': id
 					,'unixTime': unixTime
+					,'type': 'shipSelect'
 				}
 				,'geometry': geo
 			});
+			index++;
 			bounds.update(geo.coordinates);
 		}
 		map.zoomToExtent(bounds.minX, bounds.minY, bounds.maxX, bounds.maxY);
@@ -146,11 +151,8 @@
 			shipsSelect.options[shipsSelect.options.length] = new Option(item['name'], item['id']);
 		}
 		shipsSelect.style.display = 'block';
-		shipsSelect.onchange = function(e)
+		getShipRout = function(item)
 		{
-			if(indexCurrent !== null) shipsObj[indexCurrent].setStyle(contStyle);
-			indexCurrent = this.selectedIndex;
-			var item = data[indexCurrent];
 			var tsrc = getLastAISTrack + '&mmsi=' + item.propHiden['id'];
 			gmxAPI.sendCrossDomainJSONRequest(tsrc, function(response)
 			{
@@ -167,6 +169,14 @@
 			
 			shipObjCur = cont.addObjects([item])[0];
 			shipObjCur.setStyle(shipObjCurStyle);
+		};
+
+		shipsSelect.onchange = function(e)
+		{
+			if(indexCurrent !== null) shipsObj[indexCurrent].setStyle(contStyle);
+			indexCurrent = this.selectedIndex;
+			var item = data[indexCurrent];
+			getShipRout(item);
 		};
 		var prepareRout = function(item, arr)
 		{
@@ -196,6 +206,7 @@
 				,'propHiden': {
 					'relatedItem': item.propHiden['id']
 					,'unixTimes': times
+					,'type': 'route'
 				}
 				,'geometry': {
 					'type': "LINESTRING", 'coordinates': points
@@ -220,6 +231,9 @@
 					,'name': item.properties['name']
 					,'time': unixTimeToString(times[0])
 				}
+				,'propHiden': {
+					'type': 'beginPoint'
+				}
 				,'geometry': {
 					'type': "POINT", 'coordinates': points[0]
 				}
@@ -232,6 +246,9 @@
 					'id': item.propHiden['id']
 					,'name': item.properties['name']
 					,'time': unixTimeToString(times[times.length - 1])
+				}
+				,'propHiden': {
+					'type': 'endPoint'
 				}
 				,'geometry': {
 					'type': "POINT", 'coordinates': points[points.length - 1]
@@ -299,7 +316,20 @@
 		if(cont) cont.remove();
 		cont = map.addObject();
 		cont.setStyle(contStyle);
-		cont.enableHoverBalloon();
+		
+		function myClick() {
+			var obj = arguments[0];
+			var keyPress = arguments[1];
+			if(!keyPress['ctrlKey']) {			//	При click НЕ нажата клавиша: ctrlKey - обычный стандартный балун
+				return false;
+			}
+			//	При click нажата клавиша: ctrlKey - совершаем необходимые действия, без балуна
+			var index = obj.properties['index'];
+			var item = data[index];
+			getShipRout(item);
+			return true;
+		}
+		cont.enableHoverBalloon(null, {'OnClickSwitcher': myClick});
 		var psrc = getLastAISPosition + '&Date=' + dt;
 		gmxAPI.sendCrossDomainJSONRequest(psrc, function(response)
 		{
