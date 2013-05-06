@@ -16,7 +16,7 @@
 <br/>
 
 <script>
-      createFlashMap(document.getElementById("map"), "7VKHM", function(map) //загружает выборочную карту с того хоста, на котором лежит api.js
+      createFlashMap(document.getElementById("map"), 'maps.kosmosnimki.ru', "7VKHM", function(map) //загружает выборочную карту с того хоста, на котором лежит api.js
 		{
 			map.moveTo(44.340806, 53.225797, 3);//позиционирует карту по координатам центра и выбирает масштаб
 			var myLayer = map.layers["RegionsRF83_pop2"];
@@ -44,7 +44,9 @@
 			{
 				var str = obj.properties['Регион'] || 'Магадан';
 				str = str.replace(/\s+\w+/g, '+');
-				var txt = '<iframe align="center" width="100%" height="100%" src="http://www.google.ru/advanced_search?q=';
+				//var surl = 'http://www.google.ru/advanced_search?q=';
+				var surl = 'http://ru.wikipedia.org/wiki/';
+				var txt = '<iframe align="center" width="100%" height="100%" src="' + surl;
 				txt += str + '">';
 				txt += '</iframe>';
 				var $div = $(txt);
