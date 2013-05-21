@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script> 
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+
+<body>
+<div id="map" style="width: 600px; height: 400px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+В данном примере показаны различные варианты управления панелями инструментов.
+<br>drawing.tools: отключить инструмент рисования:
+<br> <button id="button1">"маркеров"</button>
+<br> <button id="button2">"линий"</button>  
+<br> <button id="button3">"полигонов"</button>  
+<br> <button id="button4">"прямоугольников"</button>  
+<br/>
+<br>отключить
+<br> <button id="button5">"масштабную шкалу"</button>
+<br> <button id="button6">"координаты"</button>
+<br> <button id="button7">"список базовых слоев"</button>
+<br> <button id="button8">"управление Zoom"</button>
+<br>общие команды
+<br> <button id="button9">"минимизация элементов управления"</button>
+<br> <button id="button10">"скрыть все элементы управления"</button>
+</div>
+
+
+<script>
+	createFlashMap(document.getElementById("map"), function(map)
+    { 
+		  map.setMode("map"); //режим просмотра карты
+		  if(map.drawing) {
+			document.getElementById("button1").onclick = function()
+			{
+				  map.drawing.tools["POINT"].setVisible(false); // отключить инструмент маркеров
+			}
+			document.getElementById("button2").onclick = function()
+			{
+			  map.drawing.tools["LINESTRING"].setVisible(false); // отключить инструмент рисования линий и измерения расстояний
+			}
+			document.getElementById("button3").onclick = function()
+			{
+			  map.drawing.tools["POLYGON"].setVisible(false); // отключить инструмент рисования полигонов
+			}
+			document.getElementById("button4").onclick = function()
+			{
+			  map.drawing.tools["FRAME"].setVisible(false); // отключить инструмент ножницы
+			}
+		  }
+		document.getElementById("button5").onclick = function()
+		{
+		  map.scaleBar.setVisible(false); // отключить масштабную шкалу
+		}
+		document.getElementById("button6").onclick = function()
+		{
+		  map.coordinates.setVisible(false); // отключить координаты
+		}
+		document.getElementById("button7").onclick = function()
+		{
+		  map.baseLayerControl.setVisible(false);  //отключить список базовых слоев
+		}
+		document.getElementById("button8").onclick = function()
+		{
+		  map.zoomControl.setVisible(false); //отключить zoomControl
+		}
+		document.getElementById("button9").onclick = function()
+		{
+			map.minimizeTools();
+		}
+		document.getElementById("button10").onclick = function()
+		{
+			gmxAPI.map.allControls.setVisible(false);
+		}
+   });
+</script>
+</body>
+</html>
