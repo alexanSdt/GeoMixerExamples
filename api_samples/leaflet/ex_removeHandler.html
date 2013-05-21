@@ -8,20 +8,28 @@
 </head>
 
 <body>
-<button id="add_event">Добавить событие onClick</button>
-<button id="remove_event">Удалить событие onClick</button>
-<div id="map" style="width: 1000px; height: 650px;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+В данном примере показаны операции управления балунами на векторном обьекте:
+<br> <button id="add_event">"Добавить событие"</button> (click на объекте)
+<br> <button id="button1">"Закрыть балун"</button>  
+<br> <button id="remove_event">"Удалить событие"</button>  
+<br/>
+</div>
 <br/>
 
 <script> 
       	createFlashMap(document.getElementById("map"),function(map)
 	{
-		map.moveTo(160.63333,56.06666666,3);
+		map.moveTo(172.44140, 60.230846, 3);
 
 		var marker = map.addObject();
 		marker.setPoint(160.63333, 56.06666666); 
-		marker.setStyle({marker: {image: "../data/img/blau_knopka.png", center: true}});
-		  
+		marker.setStyle({
+			fill: {
+				color: 0xff0000,
+				opacity: 90
+			}});
 
 		var addButton = document.getElementById("add_event");
 		addButton.onclick = function()
@@ -50,6 +58,10 @@
 		removeButton.onclick = function()
 		{
 			marker.removeHandler("onClick");
+		}
+		document.getElementById("button1").onclick = function()
+		{
+			gmxAPI._listeners.dispatchEvent('hideBalloons', gmxAPI.map, {});	// Проверка map Listeners на hideBalloons
 		}
 
 	});

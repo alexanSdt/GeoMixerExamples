@@ -12,7 +12,7 @@
 <script>
 	createFlashMap(document.getElementById("map"), 'maps.kosmosnimki.ru', "7VKHM", function(map)
 	{ 
-		map.moveTo(37, 55, 3);
+		map.moveTo(30.179443, 59.886186, 9);
 		var myLayer = map.layers['POI_museums_web'];
 		myLayer.filters[0].setStyle({
 			fill: {
@@ -21,7 +21,7 @@
 					,r2: 50
 					,addColorStop: [
 						[0, 0xf100ff, 100]
-						//,[0.25, 0x00ff00, 20]
+						,[0.25, 0x00ff00, 20]
 						//,[0.5, 0x000000, 1]
 						//,[0.85, 0xf100ff, 10]
 						,[1, 0xf100ff, 0]

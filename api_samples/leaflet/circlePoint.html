@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
+<script src="http://localhost/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
 
 </head>
 
@@ -12,14 +12,13 @@
 <script>
 	createFlashMap(document.getElementById("map"), 'maps.kosmosnimki.ru', "7VKHM", function(map)
 	{ 
-		map.moveTo(37, 55, 3);
+		map.moveTo(37.604312, 55.760154, 13);
 		var myLayer = map.layers['POI_museums_web'];
-		myLayer.setVisible(true);
 		myLayer.filters[0].setStyle({
 			marker: {
 				center: true,
 				circle: true,
-				size: 128
+				size: 40
 			},
 			fill: {
 				color: 0xff0000,
@@ -31,6 +30,7 @@
 				,align: 'center'
 			}
 		});
+		myLayer.setVisible(true);
 	}); 
 </script>
 

@@ -5,7 +5,7 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
 	
-<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
+<script src="http://localhost/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
 	
 	<title>GeoMixer API - Штриховка</title>
 
@@ -80,8 +80,8 @@
 <script>
 	createFlashMap(document.getElementById("map_container"), 'maps.kosmosnimki.ru', "7VKHM", function(map)
 	{
-		map.moveTo(80.41, 64.79, 3);
-		var myLayer = map.layers["RegionsRF83_pop2"];
+		map.moveTo(41.149292, 43.483219, 9);
+		var myLayer = map.layers["Границы_заповедников"];
 		myLayer.setVisible(true);
 		var ph = {};
 		var ph1 = {};
