@@ -10,24 +10,36 @@
 <body>
 <div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
 <script>
-	createFlashMap(document.getElementById("map"), 'maps.kosmosnimki.ru', "7VKHM", function(map)
+	createFlashMap(document.getElementById("map"), function(map)
 	{ 
-		map.moveTo(30.179443, 59.886186, 9);
-		var myLayer = map.layers['POI_museums_web'];
-		myLayer.filters[0].setStyle({
-			fill: {
-				radialGradient: {
-					r1: 0
-					,r2: 50
-					,addColorStop: [
-						[0, 0xf100ff, 100]
-						,[0.25, 0x00ff00, 20]
-						//,[0.5, 0x000000, 1]
-						//,[0.85, 0xf100ff, 10]
-						,[1, 0xf100ff, 0]
-					]
-				}
-			}
+		map.moveTo(0, 0, 5);
+		var myLayer = map.addLayer();
+		var arr = [
+			{"id":115162,"properties":{"ogc_fid":"115162","SCENEID":"25","CLOUDS":"2"},"geometry":{"type":"POINT","coordinates":[0,0]}}
+			,
+			{"id":115163,"properties":{"ogc_fid":"115163","SCENEID":"121125","CLOUDS":"2"},"geometry":{"type":"POINT","coordinates":[132.21,60.52]}}
+		];
+		var out = false;
+		if(myLayer) out = myLayer.addItems(arr);
+
+ 		myLayer.filters[0].setStyle({
+               fill: {
+                    radialGradient: {
+                        r1: 0,
+                         r2: 20,
+                        addColorStop: [
+                            [0, 0xffff00, 50],
+                            [0.99, 0xff0000, 50],
+                            [1, 0xff3300, 0]
+                        ]
+                    }
+                },
+                label: {
+                    size: 12,
+                    color: 0xffffff,
+                    field: 'SCENEID',
+                    align: 'center'
+                }		
 		});
 		myLayer.setVisible(true);
 	}); 
