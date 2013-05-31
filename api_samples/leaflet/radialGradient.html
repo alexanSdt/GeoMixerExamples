@@ -6,42 +6,48 @@
 
 </head>
 
-
 <body>
-<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+В данном примере показана операция <button id="button">Добавления стиля</button>  (радиальный градиент) для точек векторного слоя
+<br/>
+</div>
 <script>
 	createFlashMap(document.getElementById("map"), function(map)
 	{ 
 		map.moveTo(0, 0, 5);
-		var myLayer = map.addLayer();
-		var arr = [
-			{"id":115162,"properties":{"ogc_fid":"115162","SCENEID":"25","CLOUDS":"2"},"geometry":{"type":"POINT","coordinates":[0,0]}}
-			,
-			{"id":115163,"properties":{"ogc_fid":"115163","SCENEID":"121125","CLOUDS":"2"},"geometry":{"type":"POINT","coordinates":[132.21,60.52]}}
-		];
-		var out = false;
-		if(myLayer) out = myLayer.addItems(arr);
 
- 		myLayer.filters[0].setStyle({
-               fill: {
-                    radialGradient: {
-                        r1: 0,
-                         r2: 20,
-                        addColorStop: [
-                            [0, 0xffff00, 50],
-                            [0.99, 0xff0000, 50],
-                            [1, 0xff3300, 0]
-                        ]
-                    }
-                },
-                label: {
-                    size: 12,
-                    color: 0xffffff,
-                    field: 'SCENEID',
-                    align: 'center'
-                }		
-		});
-		myLayer.setVisible(true);
+		document.getElementById("button").onclick = function() {
+			var myLayer = map.addLayer();
+			var arr = [
+				{"id":115162,"properties":{"ogc_fid":"115162","SCENEID":"25","CLOUDS":"2"},"geometry":{"type":"POINT","coordinates":[0,0]}}
+				,
+				{"id":115163,"properties":{"ogc_fid":"115163","SCENEID":"121125","CLOUDS":"2"},"geometry":{"type":"POINT","coordinates":[132.21,60.52]}}
+			];
+			var out = false;
+			if(myLayer) out = myLayer.addItems(arr);
+
+			myLayer.filters[0].setStyle({
+				   fill: {
+						radialGradient: {
+							r1: 0,
+							 r2: 20,
+							addColorStop: [
+								[0, 0xffff00, 50],
+								[0.99, 0xff0000, 50],
+								[1, 0xff3300, 0]
+							]
+						}
+					},
+					label: {
+						size: 12,
+						color: 0xffffff,
+						field: 'SCENEID',
+						align: 'center'
+					}		
+			});
+			myLayer.setVisible(true);
+		}
 	}); 
 </script>
 
