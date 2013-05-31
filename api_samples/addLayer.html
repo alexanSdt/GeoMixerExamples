@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script> 
+	<title>GeoMixer API - примеры использования</title>
+</head>
+<body>
+<div style="">
+Команды	API <button id="button0">addLayer</button>
+	<button id="button">addItems</button>
+	<button id="button5">setDateInterval</button>
+	<button id="button4">setStyle</button>
+	<button id="button2">setVisibilityFilter</button>
+	<button id="button3">setFilter</button>
+	<button id="button1">removeItems</button>
+	<br/>
+	<span id="res"></span>
+</div>
+	<br/>
+<div id="map_container" style="width: 800px; height: 650px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+
+
+<script> 
+	createFlashMap(document.getElementById("map_container"), function(map)
+	{
+		map.moveTo(132.17102, 60.519149, 7);
+		var myLayer = null;
+		var res = document.getElementById("res");
+		
+		document.getElementById("button0").onclick = function()
+		{
+			var ph = {
+				'properties': {
+					'Temporal': true
+					,'TemporalColumnName': "ACQDATE"
+				}				
+			};
+			myLayer = map.addLayer(ph);
+			myLayer.setVisible(true);
+			res.innerHTML = 'Добавлен слой id:<b>' + myLayer.objectId + '</b> title:<b>' + myLayer.properties.title + '</b>';
+			if('setDateInterval' in myLayer) myLayer.setDateInterval(new Date('2012/11/09'), new Date('2012/11/30'));
+		}
+		
+		document.getElementById("button").onclick = function()
+		{
+			var arr = [
+				{"id":115162,"properties":{"ogc_fid":"115162","SCENEID":"SP4I2_294227_121125","PLATFORM":"SPOT 4","SENSOR":"HRVIR-2-I","BANDS":"1-2-3","CLOUDS":"2","TILES":"/IRK/MS/12/11/SP4I2_294227_121125.tiles","ACQDATE":"2012.11.25 01:43:15","Delay":"0:30","Station":"IRK","ORBIT":"76071","SEGMENT":"SP4_76071_121125014310_H2_I","VIEWANGLE":"6.95254","SUNELEV":"7.50902","SUNAZIM":"163.147","PATH":"294","ROW":"227","RESOLUTION":"20","ACQTIME":"1:43:15","GM_LayerName":"4ECFEE1FA68D49FB9B0332D37B9F983B"},"geometry":{"type":"POLYGON","coordinates":[[[132.21,59.52],[132.53,60.27],[133.49,60.13],[133.27,59.47],[132.21,59.52]]]}}
+				,
+				{"id":115163,"properties":{"ogc_fid":"115163","SCENEID":"SP4I2_294226_121125","PLATFORM":"SPOT 4","SENSOR":"HRVIR-2-I","BANDS":"1-2-3","CLOUDS":"2","TILES":"/IRK/MS/12/11/SP4I2_294226_121125.tiles","ACQDATE":"2012.11.27 01:43:14","Delay":"0:30","Station":"IRK","ORBIT":"76071","SEGMENT":"SP4_76071_121125014310_H2_I","VIEWANGLE":"6.95254","SUNELEV":"7.4503","SUNAZIM":"163.195","PATH":"294","ROW":"226","RESOLUTION":"20","ACQTIME":"1:43:14","GM_LayerName":"10CC5FA63E044ECFB755291767FCA352"},"geometry":{"type":"POLYGON","coordinates":[[[132.21,60.52],[132.53,61.27],[133.49,61.13],[133.27,60.47],[132.21,60.52]]]}}
+			];
+			var out = false;
+			if(myLayer) out = myLayer.addItems(arr);
+			res.innerHTML = 'Добавление обьектов в слой: <b>' + out + '</b>';
+		}
+		document.getElementById("button1").onclick = function()
+		{
+			var out = false;
+			if(myLayer) out = myLayer.removeItems([115162,115163,115080]);
+			res.innerHTML = 'Удаление обьектов из слоя: <b>' + out + '</b>';
+		}
+		document.getElementById("button2").onclick = function()
+		{
+			var sql = '"ogc_fid" = 115163';
+			if(myLayer) myLayer.setVisibilityFilter(sql);
+			res.innerHTML = 'Установка setVisibilityFilter: <b>' + sql + '</b>';
+		}
+		document.getElementById("button3").onclick = function()
+		{
+			var sql = '"SCENEID" = \'SP4I2_294227_121125\'';
+			if(myLayer) myLayer.filters[0].setFilter(sql);
+			res.innerHTML = 'Установка setFilter: <b>' + sql + '</b>';
+		}
+		document.getElementById("button4").onclick = function()
+		{
+			var out = false;
+			var color = [0x0000ff, 0xff0000];
+			if(myLayer) myLayer.filters[0].setStyle(
+				{ 
+					fill: { color: color[1], opacity: 80 },
+					outline: { color: 0x000000, thickness: 4, opacity: 100 } 
+				},
+				{ 
+					fill: { color: color[0], opacity: 100 }, 
+					outline: { color: 0x000000, thickness: 2 } 
+				}
+			);
+			res.innerHTML = 'Установка setStyle: <b>' + '</b>';
+		}
+		document.getElementById("button5").onclick = function()
+		{
+			if(myLayer && 'setDateInterval' in myLayer) myLayer.setDateInterval(new Date('2012/11/25'), new Date('2012/11/26'));
+			res.innerHTML = 'Установка setDateInterval: <b>' + '</b>';
+		}
+	});
+</script> 
+
+</body>
+</html>

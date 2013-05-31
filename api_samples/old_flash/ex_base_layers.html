@@ -1,0 +1,23 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/api.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script> 
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+
+<script>
+	createFlashMap(document.getElementById("map"), "7VKHM", function(map)//выбирает по ID карту, которую накладывает сверху на подложку Kosmosnimki.Ru
+	{
+		map.moveToCoordinates("58.0103 N, 56.0901 E", 11);
+		map.layers["overview_perm_cat"].setAsBaseLayer("Карта"); //определяем слой из набора слоев данной карты как базовый, присваиваем ему имя "Карта"
+		map.layers["Perm"].setAsBaseLayer("Снимки"); //определяем слой из набора слоев данной карты как базовый, присваиваем ему имя "Снимки"
+		
+		map.setBaseLayer("Карта"); //назначаем "Карту" слоем по умлочанию
+	});
+</script>
+</body>
+</html>
+

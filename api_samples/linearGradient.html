@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
+
+</head>
+
+
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+<script>
+	createFlashMap(document.getElementById("map"), 'maps.kosmosnimki.ru', "7VKHM", function(map)
+	{ 
+		map.moveTo(41.149292, 43.483219, 9);
+		var myLayer = map.layers["Границы_заповедников"];
+		myLayer.setVisible(true);
+		myLayer.filters[0].setStyle({
+			outline: {
+				color: 0x0000ff,
+				thickness: 1,
+				opacity: 100
+			},
+			fill: {
+				color: 0xff0000
+				,opacity: 50
+				,linearGradient: {
+					x1: 0
+					,y1: 0
+					,x2: 0
+					,y2: 256
+					,addColorStop: [
+						[0, 0xffffff, 90]
+						,[0.5, 0x0000ff, 90]
+						,[1, 0xff0000, 90]
+					]
+				}
+			}
+		});
+	}); 
+</script>
+
+</body>
+</html>

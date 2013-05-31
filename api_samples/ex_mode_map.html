@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта-->
+
+
+<script>
+        createFlashMap(document.getElementById("map"), function(map) <!--загружает выборочную карту с выборочного хоста, на котором установлен GeoMixer и накладывает ее поверх подложки Kosmosnimki-->
+		{ 
+			map.setMode("hybrid");	// выбирает "гибридный" режим отображения базовых слоев подложки Kosmosnimki 		
+			map.moveToCoordinates("55°45' N, 37°44' E", 6); // позиционирует карту по координатам в градусах-минутах и выбирает масштаб
+		}); 
+</script>
+
+</body>
+</html>

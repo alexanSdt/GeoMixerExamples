@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script> 
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+
+<br/>
+
+<input type="checkbox" id="checkbox" checked="checked" /> <span class="bodytext">Отключить/включить точки городов</span>
+
+
+<script>
+	createFlashMap(document.getElementById("map"), "maps.kosmosnimki.ru", "7VKHM", function(map)//выбирает по ID карту, которую загружает с хоста Maps.Kosmosnimki.Ru
+	{
+		map.setMode("satellite"); //выбирает режим подложки "спутник"
+		map.moveTo(37.650837, 55.733817, 7);
+		map.minimizeTools();
+		var myLayer = map.layers["TownsIkonos"];
+		myLayer.setVisible(true);
+
+		document.getElementById("checkbox").onclick = function()
+		{	
+			myLayer.setVisible(document.getElementById("checkbox").checked ? true : false); //выбирает по имени слой из набора слоев данной карты, который можно отключать
+		}
+	});
+</script>
+</body>
+</html>

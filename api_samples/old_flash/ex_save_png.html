@@ -1,0 +1,33 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/api.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script> 
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<div>Необходимо нажать правую кнопку мыши на карте и выбрать пункт меню "Сохранить в PNG файл"</div>
+
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+
+
+<script>
+        createFlashMap(document.getElementById("map"), "maps.kosmosnimki.ru", "BEBE5022484946A499BCB0F367377489", function(map) 
+			{ 
+				map.moveTo(27.340806, 53.225797, 5); //позиционирует карту по координатам центра и выбирает масштаб
+
+				map.addContextMenuItem(
+					KOSMOSNIMKI_LOCALIZED("Сохранить в PNG файл", "Save PNG"),
+					function()
+					{
+						map.savePNG('myFile.png');
+					}
+				);
+
+				
+			}
+		); 
+</script>
+
+</body>
+</html>

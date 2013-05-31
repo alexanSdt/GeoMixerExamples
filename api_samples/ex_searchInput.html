@@ -1,0 +1,95 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	
+	<link rel="stylesheet" type="text/css" href="http://maps.kosmosnimki.ru/api/jquery/jquery-ui-1.7.2.custom.css"> 
+	<link rel="stylesheet" type="text/css" href="http://maps.kosmosnimki.ru/api/treeview.css">
+	<link rel="stylesheet" type="text/css" href="http://maps.kosmosnimki.ru/api/buttons.css">
+	<link rel="stylesheet" type="text/css" href="http://maps.kosmosnimki.ru/api/search.css">
+	<!--link rel="stylesheet" type="text/css" href="../api/menu.css"-->
+	
+	<script src="http://maps.kosmosnimki.ru/api/jquery/jquery-1.5.1.min.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/jquery/jquery-ui-1.8.10.custom.min.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/jquery/jquery.treeview.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
+	
+	<script src="http://maps.kosmosnimki.ru/api/gmxCore.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/utilities.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/translations.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/lang_ru.js"></script>
+
+	<title>GeoMixer API - примеры использования</title>
+
+
+</head>
+
+<body>
+<div id="searchInput"></div>
+<div id="searchResult"></div>
+<table><tbody><tr>
+
+	<td>
+		<div id="flash" style="width: 1024px; height: 800px;"></div> <!--задаем контейнер, в который загружается карта -->
+	</td>
+	<td valign="top">
+		<div id="some"> </div>
+	</td>
+</tr></tbody></table>
+
+<script>
+	createFlashMap(document.getElementById("flash"),  function(map) {
+	
+		var oSearchControl;
+		gmxCore.loadModule("search", "http://maps.kosmosnimki.ru/api/search.js");
+		gmxCore.addModulesCallback(["search"], function(){
+			var oSearchModule = gmxCore.getModule("search");
+
+			var ServerBase = "http://maps.kosmosnimki.ru/",
+				ImagesHost = "http://maps.kosmosnimki.ru/api/img",
+				ContainerInput = document.getElementById("searchInput"),
+				ContainerList = document.getElementById("searchResult"),
+				layersSearchFlag = false;
+			
+			
+			/**Осуществляет поиск*/
+			var fnSearchByString = function(event, SearchString, layersSearchFlag)
+			{
+				if (!parseCoordinates(SearchString, function(x, y) {
+					globalFlashMap.moveTo(x, y, globalFlashMap.getZ());
+					globalFlashMap.drawing.addObject({ type: "POINT", coordinates: [x, y] }, { text: SearchString });
+				})){
+					lstResult.ShowLoading();
+					oLogic.SearchByString({SearchString: SearchString, IsStrongSearch: true, layersSearchFlag: layersSearchFlag, callback: function(response) {
+						lstResult.ShowResult(SearchString, response);
+					}});
+				}
+			}
+			
+			/**Осуществляет выбор объекта из подсказки*/
+			var fnSelect = function(event, oAutoCompleteItem){
+				lstResult.ShowResult(oAutoCompleteItem.label, [{ name: "Выбрано", SearchResult: [oAutoCompleteItem.GeoObject] }]);
+			}
+		
+			var oSearchModule = gmxCore.getModule("search");
+			var oLogic = new oSearchModule.SearchLogicGet(ServerBase, map, false);
+			
+			var fnAutoCompleteSource = function (request, response) {
+				oLogic.AutoCompleteData(request.term, response);
+			}
+			/**Результаты поиска*/
+			var lstResult = new oSearchModule.ResultListMapGet(ContainerList, map, ImagesHost);
+			/**Строка ввода поискового запроса*/
+			var btnSearch = new oSearchModule.SearchInput(ContainerInput, {
+				ImagesHost: ImagesHost,
+				layersSearchFlag: layersSearchFlag,
+				AutoCompleteSource: fnAutoCompleteSource
+			});
+			
+			$(btnSearch).bind('Search', fnSearchByString);
+			$(btnSearch).bind('AutoCompleteSelect', fnSelect);
+		});
+
+	});
+</script>
+</body>
+</html>

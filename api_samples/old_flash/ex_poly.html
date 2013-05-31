@@ -1,0 +1,39 @@
+﻿<html>
+<head>
+<script src="http://maps.kosmosnimki.ru/api/api.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+Добавить редактируемый <button id="button">полигон</button> <button id="button1">линию</button>
+<br/>
+		<div id="map" style="width: 500px; height: 300px;"></div>
+<script>
+	createFlashMap(document.getElementById("map"), function(map)
+	{
+		map.moveTo(134.16369, 45.711663,  10);
+
+		document.getElementById("button").onclick = function() {
+			map.drawing.addObject({	type: "POLYGON", coordinates: 
+				[[[134.06617, 45.75344],
+					[134.106, 45.61484],
+					[134.31062, 45.62736],
+					[134.32023, 45.74191],
+					[134.21998, 45.85813],
+					[134.06617, 45.75344]]]}
+			); // рисуем полигональный пользовательский объект
+		}
+		document.getElementById("button1").onclick = function() {
+			map.drawing.addObject({
+				type: "LINESTRING", coordinates: 
+				[[133.99339, 45.65337],[134.04419, 45.80725],[134.17877, 45.84854]]}
+			); // рисуем линию
+		}
+
+		
+	});
+</script>
+</body>
+</html>

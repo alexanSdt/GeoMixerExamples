@@ -1,0 +1,154 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
+    
+	<title>Управление созданными Tools контейнерами</title>
+</head>
+
+<body>
+    <button id="toolsContainer">Создать ToolsContainer</button>
+    <button id="toolsContainerDrawing">Добавить ToolsContainer с графич.иконками</button>
+    <button id="setToolIndex">Изменить позицию item3</button>
+    <button id="removeTool">Удалить item1</button>
+    <button id="removeToolsContainer">Удалить ToolsContainer</button>
+    <div id="map" style="width: 800px; height: 500px;"></div>
+<script>
+
+	createFlashMap(document.getElementById("map"), function(map) {
+		map.moveTo(37.586769, 55.732883, 4);//позиционирует карту по координатам центра и выбирает масштаб
+
+		var myToolsArr = [];
+		var myTools = null;
+		
+		document.getElementById("removeToolsContainer").onclick = function()
+		{
+			if(myTools) myTools.remove();
+			if(myToolsArr.length) myToolsArr.pop();
+			myTools = (myToolsArr.length ? myToolsArr[myToolsArr.length - 1] : null);
+		}
+		
+		document.getElementById("removeTool").onclick = function()
+		{
+			if(myTools) myTools.removeTool('item1');
+		}
+		
+		document.getElementById("setToolIndex").onclick = function()
+		{
+			if(myTools) myTools.setToolIndex('item3', 0);
+		}
+
+		document.getElementById("toolsContainer").onclick = function()
+		{
+			myTools = new map.ToolsContainer('test' + myToolsArr.length);
+			myToolsArr.push(myTools);
+			var myAttr1 = {
+				'onClick': function() {	alert('onClick 1'); },
+				'onCancel': function() {	alert('onCancel 1'); },
+				'onmouseover': function() { this.style.color = "orange"; },
+				'onmouseout': function() { this.style.color = "wheat"; },
+				'hint': "Меню1"
+			};
+			myTools.addTool( 'item1', myAttr1);
+			
+			var myAttr2 = {
+				'onClick': function() {	alert('onClick 2'); },
+				'onCancel': function() {	alert('onCancel 2'); },
+				'onmouseover': function() { this.style.color = "orange"; },
+				'onmouseout': function() { this.style.color = "wheat"; },
+				'hint': "Меню2"
+			};
+			myTools.addTool( 'item2', myAttr2);
+
+			var myAttr3 = {
+				'onClick': function() {	},
+				'onCancel': function() { },
+				'onmouseover': function() { this.style.color = "orange"; },
+				'onmouseout': function() { this.style.color = "wheat"; },
+				'hint': "Меню3"
+			};
+			myTools.addTool( 'item3', myAttr3);
+
+			var myAttr4 = {
+				'onClick': function() {	},
+				'onCancel': function() { },
+				'onmouseover': function() { this.style.color = "orange"; },
+				'onmouseout': function() { this.style.color = "wheat"; },
+				'hint': "Меню4"
+			};
+			myTools.addTool( 'item4', myAttr4);
+		}
+
+		document.getElementById("toolsContainerDrawing").onclick = function()
+		{
+			var apiBase = gmxAPI.getAPIFolderRoot();
+			myTools = new map.ToolsContainer('test' + myToolsArr.length, {'contType':1});
+			myToolsArr.push(myTools);
+			
+			var arr = [
+				{
+					'key': "item1",
+					'regularImageUrl': apiBase + "img/move_tool.png",
+					'activeImageUrl': apiBase + "img/move_tool_a.png",
+					'onClick': gmxAPI._drawFunctions['move'],
+					'onCancel': function() {},
+					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Перемещение", "Move")
+				}
+				,
+				{
+					'key': "item2",
+					'regularImageUrl': apiBase + "img/select_tool.png",
+					'activeImageUrl': apiBase + "img/select_tool_a.png",
+					'onClick': gmxAPI._drawFunctions['zoom'],
+					'onCancel': function() {},
+					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Увеличение", "Zoom")
+				}
+				,
+				{
+					'key': "item3",
+					'regularImageUrl': apiBase + "img/marker_tool.png",
+					'activeImageUrl': apiBase + "img/marker_tool_a.png",
+					'onClick': gmxAPI._drawFunctions['POINT'],
+					'onCancel': function() {},
+					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Маркер", "Marker")
+				}
+				,
+				{
+					'key': "item4",
+					'regularImageUrl': apiBase + "img/line_tool.png",
+					'activeImageUrl': apiBase + "img/line_tool_a.png",
+					'onClick': gmxAPI._drawFunctions['LINESTRING'],
+					'onCancel': function() {},
+					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Линия", "Line")
+				}
+				,
+				{
+					'key': "item5",
+					'regularImageUrl': apiBase + "img/polygon_tool.png",
+					'activeImageUrl': apiBase + "img/polygon_tool_a.png",
+					'onClick': gmxAPI._drawFunctions['POLYGON'],
+					'onCancel': function() {},
+					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Полигон", "Polygon")
+				}
+				,
+				{
+					'key': "item6",
+					'regularImageUrl': apiBase + "img/frame_tool.png",
+					'activeImageUrl': apiBase + "img/frame_tool_a.png",
+					'onClick': gmxAPI._drawFunctions['FRAME'],
+					'onCancel': function() {},
+					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Рамка", "Rectangle")
+				}
+			];
+			for(var i = 0; i<arr.length; i++) {
+				var ph = arr[i];
+				myTools.addTool( ph['key'], ph);
+			}
+		}
+		
+    });
+	
+</script>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>GeoMixer API - Hello World</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script> <!-- api-ключ для доступа к сервису API, полученный на account.kosmosnimki.ru для сайта kosmosnimki.ru, на котором размещена данная веб-страница --><!-- ВНИМАНИЕ! ДЛЯ ТЕСТИРОВАНИЯ С ЛОКАЛЬНОГО ДИСКА ИСПОЛЬЗУЙТЕ LOCALHOST -->
+
+<script type="text/javascript"> 
+window.onload = function()
+	{
+		createFlashMap(document.getElementById("map"),  function(map) 
+			{ 	
+			});
+	}
+</script>
+</head>
+
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+</body>
+</html>

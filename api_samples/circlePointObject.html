@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+
+<body>
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+В данном примере показана операция <button id="button">Добавления маркера</button> (стиль окружность)
+<br/>
+</div>
+
+<script>
+        createFlashMap(document.getElementById("map"), function(map) <!--загружает выборочную карту с того хоста, на котором лежит api.js-->
+	{ 
+		map.moveTo(37, 55, 3);
+		
+		document.getElementById("button").onclick = function() {
+			var o = map.addObject();
+			o.setGeometry({
+				"type":"POINT",
+				"coordinates":[37.0, 55.0]
+			});
+			o.setStyle({
+				marker: {
+					circle: true
+					,center: true
+					,size: 40
+				}
+				,
+				outline:{
+					color : 0x0000ff		// цвет линии (по умолчанию: 0)
+					,opacity : 100			// opacity линии (по умолчанию: 100)
+					,thickness: 3			// толщина линии (по умолчанию: 0)
+					//,dashes: [11,20,1,2]	// массив UInt отрезков пунктиров (по умолчанию: null)
+				}
+				,
+				fill: {
+					color: 0xff0000
+					,opacity: 50
+				}
+				,
+				label: {
+					size: 12,
+					color: 0xff00ff,
+					haloColor: 0xffffff
+					,align: 'center'
+				}
+			});
+			o.setLabel("Тестовая подпись");
+		}
+	}); 
+</script>
+
+</body>
+</html>

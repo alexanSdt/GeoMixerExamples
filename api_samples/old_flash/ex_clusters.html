@@ -1,0 +1,239 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" type="text/css" href="http://maps.kosmosnimki.ru/api/jquery/jquery-ui-1.7.2.custom.css">
+	<link rel="stylesheet" type="text/css" href="http://maps.kosmosnimki.ru/api/treeview.css">
+	<link rel="stylesheet" type="text/css" href="http://maps.kosmosnimki.ru/api/buttons.css">
+	<link rel="stylesheet" type="text/css" href="http://mapstest.kosmosnimki.ru/api/search.css">
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+	
+	<script src="http://maps.kosmosnimki.ru/api/jquery/jquery.treeview.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/gmxCore.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/utilities.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/translations.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/lang_ru.js"></script>
+
+    <script src="http://localhost/api/api.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script> 
+    
+    <style>
+	 .text_layer, #searchResult {
+		font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;color:#036;
+	 	}
+	 div.gmx_balloon table td {
+		 font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;color:#036; font-size:11px;
+		}
+	 #searchResultClear{
+		 cursor: pointer;
+		}
+	</style>
+	<title>Каталог организаций на карте</title>
+</head>
+
+<body>
+	<table width="100%" cellpadding="5">
+        <tr>
+        <td><div id="searchInput"></div></td>
+        <td><div id="searchInputVector"></div></td>
+        </tr>
+        <tr>
+        <td width="50%" valign="top">
+        			<div id="map_container" style="width: 100%; height: 600px;"></div>
+        </td>
+        <td width="25%" valign="top">
+                    <div class="text_layer">
+                   
+                        <input type="checkbox" id="checkbox_myLayer" checked> 
+                        <label for="checkbox_myLayer" style="cursor:pointer; cursor:hand; margin-left:8px;">
+                           <span style="font-size:16px">Организации и компании</span> 
+                        </label>
+                  
+                    </div>
+                    <div style="padding:10px 0 5px 30px;">
+                        <select id="select_category" onChange="updateOrg();">
+                        <option value="0" selected>---</option>
+                        <option value="1">Кадастр, инвентаризация</option>
+                        <option value="2">Hавигация, связь, транспорт</option>
+                        <option value="3">Геодезия</option>
+                        <option value="4">Картография, ГИС</option>
+                        <option value="5">ДДЗ</option>
+                        <option value="6">ГИС и Интернет</option>
+                        <option value="7">Сельское хозяйство</option>
+                        <option value="8">Оборона, правопорядок, ЧС</option>
+                        </select>
+                    </div>
+       	 <div align="right" ><img id="searchResultClear" hidden="true" src="http://maps.kosmosnimki.ru/api/img/close.png" alt="Очистить результаты поиска"></div><div id="searchResult" style="height:400px; overflow:auto;"></div></td>
+         </tr>
+     </table>
+<script>
+
+	var myLayer = null;
+
+	// кластеризация
+	var RenderStyle = {		// стили кластеров
+			marker: { image: '../data/img/cluster_circ.png', center: true, minScale: 0.5, maxScale: 2, scale: '[Количество]/50' }
+			,
+			label: { size: 12, align:'center', color: 0xff00ff, haloColor: 0xffffff, field:'Количество' }
+	};
+	var HoverStyle = {		// стили кластеров при наведении
+		marker: { image: '../data/img/cluster_circ_hov.png', center: true, minScale: 0.5, maxScale: 2, scale: '[Количество]/50' }
+	};
+	var clusterView = {		// Атрибуты отображения членов кластера (при отсутствии не отображать)
+		'maxMembers': 10	// максимальное колич.обьектов в кластере (по умолчанию '10')
+		,'radius': 40		// максимальный радиус сдвига координат обьектов попавших в кластер (по умолчанию '50')
+		,'delta': 10		// разброс сдвига координат (по умолчанию '0')
+		,'bgStyle': {		// Стиль подложки отображения (по умолчанию '0')
+			'fill': { 'color': 0xffff00, 'opacity': 20 },
+			'outline': { 'color': 0x00ff00, 'opacity': 1, 'thickness': 10 }
+		}
+		,'lineStyle': { 'color': 0x0600ff, 'opacity': 30, 'thickness': 1 }	// Стиль линии соединяющей центр кластера с отображаемым обьектом
+	};
+
+	var ph = {
+		'radius': 80				// радиус кластеризации в пикселах (по умолчанию 20)
+		,'iterationCount': 1		// количество итераций K-means (по умолчанию 1)
+		,'newProperties': {						// Заполняемые поля properties кластеров
+			'Количество': '[objectInCluster]'		// objectInCluster - количество обьектов попавших в кластер (по умолчанию 'Количество')
+			,'Метка': 'Кластер'		// Простое текстовое поле
+			//'По данным': '<a href="http://gisa.ru/organiz.html">ГИС-Ассоциации</a>'		// Простое текстовое поле
+		}
+		,
+		'clusterView': clusterView			// Атрибуты отображения членов кластера (при отсутствии не отображать)
+		,
+		"RenderStyle": RenderStyle,		// стили кластеров
+		"HoverStyle": HoverStyle		// стили кластеров при наведении
+	};
+
+	function setClusters() {	
+		for (var i=0; i<myLayer.filters.length; i++)
+		{
+			myLayer.filters[i].setClusters(ph);
+			myLayer.filters[i].enableHoverBalloon();
+		}
+	}
+
+	function delClusters() {	
+		for (var i=0; i<myLayer.filters.length; i++)
+		{
+			myLayer.filters[i].delClusters();
+		}
+	}
+
+	createFlashMap(document.getElementById("map_container"), 'maps.kosmosnimki.ru', '7VKHM', function(map)
+	{
+		globalFlashMap = map;
+		var btnSearchResultClear = document.getElementById("searchResultClear");
+		
+		map.setMinMaxZoom(1, 17);
+		window._deb = map;
+		map.moveTo(37.586769, 55.732883, 4);//позиционирует карту по координатам центра и выбирает масштаб
+
+		myLayer = map.layers["Gisa_org_part12_9GN"];
+		myLayer.setVisible(true);
+	
+		myLayer.enableHoverBalloon(function(o) {
+			var str = "";
+			var prop = o.properties;
+			if(prop['Количество']) {
+				str = "<div style='font-family:sans-serif; font-size:12px; color:#213570;'>" + "Количество организаций: " + prop['Количество'] + "</div>";
+			} else {
+				str = "<div style='font-family:sans-serif; font-size:11px; color:#213570;'>" + "<h3>" + o.properties.Name + "</h3>" + "<b>Адрес:</b> " + o.properties['Address'] + "<br>" + "<b>Тел:</b> " + o.properties['Phone'] + "<br>" + "<b>E-Mail:</b> " + o.properties['Email'] + "<br>" + "<b>Url:</b> " + o.properties['Url'] + "<br><a href='" + o.properties['Gisa ru'] + "' target='_blank'>Страница на сайте ГИС-А</a>" + "</div>";
+			}
+			return str;
+		});
+
+		setClusters();
+
+		document.getElementById("checkbox_myLayer").onclick = function()
+		{
+			myLayer.setVisible(document.getElementById("checkbox_myLayer").checked ? true : false); 
+		}
+
+
+var oSearchControl;
+		gmxCore.loadModule("search", "http://mapstest.kosmosnimki.ru/api/search.js");
+		gmxCore.addModulesCallback(["search"], function(){
+			var oSearchModule = gmxCore.getModule("search");
+			var ServerBase = "http://maps.kosmosnimki.ru/",
+				ImagesHost = "http://maps.kosmosnimki.ru/api/img",
+				ContainerInput = document.getElementById("searchInput"),
+				ContainerInputVector = document.getElementById("searchInputVector"),
+				ContainerList = document.getElementById("searchResult"),
+				layersSearchFlag = false;
+			/**Осуществляет поиск*/
+			var fnSearchByString = function(event, SearchString, layersSearchFlag)
+			{
+				if (!parseCoordinates(SearchString, function(x, y) {
+					globalFlashMap.moveTo(x, y, globalFlashMap.getZ());
+					globalFlashMap.drawing.addObject({ type: "POINT", coordinates: [x, y] }, { text: SearchString });
+				})){
+					lstResult.ShowLoading();
+					oLogic.SearchByString({SearchString: SearchString, IsStrongSearch: true, layersSearchFlag: layersSearchFlag, callback: function(response) {
+						lstResult.ShowResult(SearchString, response);
+					}});
+				}
+				btnSearchResultClear.hidden=false;
+			}
+
+			var fnSearchVector = function(event, SearchString){
+				lstResult.ShowLoading();
+				oSearchDataProvider.LayerSearch(SearchString, null, function(arrLayerSearchResult){
+					lstResult.ShowResult(SearchString, arrLayerSearchResult);
+				});
+				btnSearchResultClear.hidden=false;
+			}
+
+			/**Осуществляет выбор объекта из подсказки*/
+			var fnSelect = function(event, oAutoCompleteItem){
+				lstResult.ShowResult(oAutoCompleteItem.label, [{ name: "Выбрано", SearchResult: [oAutoCompleteItem.GeoObject] }]);
+			}
+			var oSearchModule = gmxCore.getModule("search");
+			var oSearchDataProvider = new oSearchModule.SearchDataProvider(ServerBase, map, ["Name", "Address"]);
+			var oLogic = new oSearchModule.SearchLogic(oSearchDataProvider);
+
+			var fnAutoCompleteSource = function (request, response) {
+				oLogic.AutoCompleteData(request.term, response);
+			}
+
+			/**Результаты поиска*/
+			var lstResult = new oSearchModule.ResultListMapGet(ContainerList, map, ImagesHost, false);
+			/**Строка ввода поискового запроса*/
+			var btnSearch = new oSearchModule.SearchInput(ContainerInput, {
+				ImagesHost: ImagesHost,
+				layersSearchFlag: layersSearchFlag,
+				AutoCompleteSource: fnAutoCompleteSource
+			});
+
+			var btnSearchVector = new oSearchModule.SearchInput(ContainerInputVector, {
+				ImagesHost: ImagesHost,
+				layersSearchFlag: false,
+				AutoCompleteSource: null
+			});
+			
+			btnSearchVector.setAddressDefault('Поиск по организациям');
+			btnSearchResultClear.onclick = function(){ btnSearchResultClear.hidden=true; lstResult.Unload();};
+			$(btnSearch).bind('Search', fnSearchByString);
+			$(btnSearchVector).bind('Search', fnSearchVector);
+			$(btnSearch).bind('AutoCompleteSelect', fnSelect);
+		});
+	});
+
+	// фильтр по атрибутам
+	function updateOrg()
+	{
+		var opts = document.getElementById("select_category").options;
+		var idx = opts.selectedIndex;
+		var attrName = ["--", "Кадастр инвентаризация", "Hавигация связь транспорт", "Геодезия", "Картография ГИС", "ДДЗ", "ГИС и Интернет", "Сельское хозяйство", "Оборона правопорядок ЧС"][idx];
+		delClusters(myLayer);
+		var sql = "`" + attrName + "` = 1";
+		if(attrName == '--') sql = "";
+		myLayer.filters[0].setFilter(sql);
+		setClusters();
+	}
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
+
+</head>
+
+<body>
+
+<br/>
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+В данном примере показаны команды АПИ при помощи которых можно <button id="button">"Добавить пунктирную линию"</button>
+<br/>
+</div>
+
+<script>
+        createFlashMap(document.getElementById("map"), function(map) <!--загружает выборочную карту с того хоста, на котором лежит api.js-->
+	{ 
+		map.moveTo(37, 55, 3);
+		document.getElementById("button").onclick = function() {
+			var o = map.addObject();
+			o.setGeometry({
+				"type":"LINESTRING",
+				"coordinates":[[32.3437,60.2308],[38.1445,58.6189],[37.6171,55.6581],[49.0429,46.1433]]
+			});
+			o.setStyle({
+				outline: {
+					color: 0x000000,
+					thickness: 1,
+					opacity: 100,
+					dashes: [3,2,1,2]
+				}
+			});
+		}
+	}); 
+</script>
+
+</body>
+</html>

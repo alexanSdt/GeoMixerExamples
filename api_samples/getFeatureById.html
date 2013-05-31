@@ -1,0 +1,65 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script> 
+
+<title>GeoMixer API - примеры использования</title>
+</head>
+<body>
+<button id="show_objects">Получить объект ogc_fid = 5650</button>
+<button id="show_layer">Показать слой</button>
+<br />
+<table><tbody><tr>
+	<td>
+		<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+	</td>
+	<td valign="top">
+		<div id="result"></div>
+	</td>
+</tr></tbody></table>
+<script>
+
+var div = document.getElementById('map');
+
+createFlashMap(div, 'maps.kosmosnimki.ru', "7VKHM",
+	function (map) 
+	{
+		map.moveTo(37, 55, 2);
+		var myLayer = map.layers['АЗС'];
+		var identityField = gmxAPI.getIdentityField(myLayer);
+
+		myLayer.enableHoverBalloon(function(o) // выбор слоя карты по его названию
+		{ 
+			return o.properties["NAME"]; 
+		});
+		document.getElementById("show_layer").onclick = function()
+		{
+			myLayer.setVisible(true);
+		}
+
+		var button = document.getElementById("show_objects");
+		button.onclick = function()
+		{
+			myLayer.getFeatureById( 5650, 
+				function(features) 
+				{
+					var out = identityField + ': <b>' + features.properties[identityField] + "</b>" + (features.properties['NAME'] ? ' <b>' + features.properties['NAME'] + "</b>" : '');
+					var geo = features.getGeometry();
+					if(geo.type == 'POINT') {
+						var c = geo.coordinates;
+						out += " (" + c[0] + ", " + c[1] + ")";
+					}
+					var str = 'Слой: <b>' + myLayer.properties.title + '</b><br>';
+					str += out;
+					//alert(str);
+					document.getElementById("result").innerHTML = str;
+				}
+			);
+		}
+	}
+);
+
+</script>
+
+</body>
+</html>

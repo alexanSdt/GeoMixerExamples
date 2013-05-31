@@ -1,0 +1,77 @@
+﻿<html>
+<head>
+<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<table>
+	<tr>
+		<td width="500" rowspan="2">
+		<div id="map" style="width: 500px; height: 300px;"></div>
+		</td>
+		<td width="111" height="146" align="center">
+		<button id="setText_button">Изменить текст маркера</button>
+		<br><br>
+		<button id="coordinates_button">Получить координаты</button>
+		</td>
+	</tr>
+	<tr>
+	  <td align="center"><button id="remove_button">Удалить объекты</button>
+      </td>
+  </tr>
+ </table>
+ <br/>
+<script>
+	createFlashMap(document.getElementById("map"), function(map)
+	{
+	
+		map.moveTo(134.16369, 45.711663,  10);
+		//map.drawing.setEditable(false);
+		var point = map.drawing.addObject({ type: "POINT", coordinates: [134.16369, 45.711663]}, {'text': 'Пример точки'}); // рисуем на карте точечный пользовательский объект - маркер
+
+		var polygon = map.drawing.addObject({	type: "POLYGON", coordinates: 
+			[[[134.06617, 45.75344],
+				[134.106, 45.61484],
+				[134.31062, 45.62736],
+				[134.32023, 45.74191],
+				[134.21998, 45.85813],
+				[134.06617, 45.75344]]]}
+			,{'text': 'Пример полигона'}
+		); // рисуем полигональный пользовательский объект
+
+		
+		var line = map.drawing.addObject({
+			type: "LINESTRING", coordinates: 
+			[[133.99339, 45.65337],[134.04419, 45.80725],[134.17877, 45.84854]]}
+			,{'text': 'Пример линии'}
+		); // рисуем линию
+
+		document.getElementById("coordinates_button").onclick = function() //Выводим координаты объектов 
+		{
+			var a = [];
+			map.drawing.forEachObject(function(o) {
+				a.push(JSON.stringify(o.geometry));
+			});
+			alert(a.join("\r\n")); 
+			//alert(JSON.stringify(a)); 
+		}
+
+		document.getElementById("remove_button").onclick = function() { //Удаляем объекты
+			map.drawing.forEachObject(function(o) { o.remove(); });
+		}
+		
+		var count = 1;
+		document.getElementById("setText_button").onclick = function()
+		{
+			point.setText('Точка: ' + count);
+			polygon.setText('Полигон: ' + count);
+			line.setText('Линия: ' + count);
+			count++;
+		}
+
+	});
+</script>
+</body>
+</html>

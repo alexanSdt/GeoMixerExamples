@@ -1,0 +1,57 @@
+<html>
+<head>
+<script src="http://maps.kosmosnimki.ru/api/api.js?key=5174DBDFDF799681C316E0E7C6ADFF08" charset="windows-1251"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GeoMixer API - примеры использования</title>
+
+</head>
+
+<body>
+<div id="map_container" style="width: 800px; height: 650px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div style="">
+Получать видимость обьектов векторного слоя	<button id="button">с отображением обьектов</button>
+	<button id="button1">Без отображения обьектов</button>
+	<br/>
+	<textarea id="res" style="width: 500px; height: 200px;"></textarea>
+</div>
+
+<script> 
+	createFlashMap(document.getElementById("map_container"), "maps.kosmosnimki.ru", "7VKHM", function(map)
+	{
+		map.moveTo(17.427919, 53.354861, 7);
+		var myLayer = map.layers["АЗС"];
+		myLayer.setVisible(true);
+		
+		var callback = function(arr)
+		{
+			var addCount = 0;
+			var delCount = 0;
+			for (var i = 0; i < arr.length; i++) {
+				var pt = arr[i];
+				var onExtent = pt.onExtent;	 			// true - стал виден иначе стал не виден
+									//var geom = pt.item.geometry;	 			// геометрия обьекта
+									//var prop = pt.item.properties;	 		// properties обьекта
+									//var layer = pt.item.layer;	 			// Векторный слой которому принадлежит полученный обьект
+				if(onExtent) addCount++;
+				else delCount++;
+			}
+			var out = '\n Добавлено ' + addCount;
+			out += ' удалено ' + delCount;
+			var old = document.getElementById("res").innerHTML;
+			document.getElementById("res").innerHTML = out + old;
+		}
+		document.getElementById("button").onclick = function()
+		{
+			myLayer.setVisibilityFilter();
+			myLayer.addObserver(callback, {'asArray':true});
+		}
+		document.getElementById("button1").onclick = function()
+		{
+			myLayer.setVisibilityFilter('"ogc_fid" = -1');
+			myLayer.addObserver(callback, {'asArray':true, 'ignoreVisibilityFilter':true});
+		}
+	});
+</script> 
+
+</body>
+</html>

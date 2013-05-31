@@ -1,0 +1,37 @@
+﻿<html>
+<head>
+<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<button id="button">Установить событие добавления нового пользовательского объекта на карту</button>
+<button id="button1">Добавить пользовательский объект на карту</button>
+<br/>
+<div id="map" style="width: 860px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+
+<script>
+      createFlashMap(document.getElementById("map"), function(map)
+																								 
+      {	
+			map.moveTo(134.16369, 45.711663, 9);
+			map.drawing.addObject({ type: "POINT", coordinates: [134.16369, 45.711663]}); //добавляет точечный объект (маркер) на карту
+			document.getElementById("button1").onclick = function() {
+				map.drawing.addObject({ type: "POINT", coordinates: [134.16369 + 0.2*Math.random(), 45.711663 + 0.2*Math.random()]}); //добавляет точечный объект (маркер) на карту
+			}
+
+			document.getElementById("button").onclick = function() {
+			    map.drawing.setHandler("onAdd", function(o) //определяет событие
+				{	
+					 map.drawing.forEachObject(function(o2) // удаляет ранее созданный объект
+					 {
+					   if (o2 != o)
+						 o2.remove(); 
+					});
+				});
+			}
+       });
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script> 
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<p><input name="search3" style="width:400px" id="search_string3" type="text" value="музей истории">&nbsp;&nbsp;<input id="search_button3" value="Поиск по векторному слою" type="submit"></p>
+  <div id="map2" style="width: 600px; height: 450px;"></div><br/>
+<input type="checkbox" id="checkbox_myLayer"> Показать векторный слой
+
+<script>
+
+	createFlashMap(document.getElementById("map2"), "maps.kosmosnimki.ru", "7VKHM", function(map)
+	{
+		map.moveTo(37.623590, 55.753757, 15);
+		var markers = [];
+		
+		var checkbox = document.getElementById("checkbox_myLayer");
+		checkbox.checked = false;
+		checkbox.onclick = function()
+		{
+			map.layers["POI"].setVisible(checkbox.checked);
+		}
+		
+		document.getElementById("search_button3").onclick = function()
+		{
+			var func = function(features) 
+			{
+				for (var i = 0; i < markers.length; i++)
+					markers[i].remove();
+				markers = [];
+
+				var names = [];
+				for (var i = 0; i < features.length; i++)
+				{
+					var f = features[i];
+					var obj = map.addObject(f.geometry, f.properties);
+					obj.setStyle(
+						{ marker: { image: "../data/img/search.png", dx: -15, dy: -35 } }, 
+						{ marker: { image: "../data/img/search_a.png", dx: -15, dy: -35 } }
+					);
+					obj.enableHoverBalloon();	
+					markers.push(obj);
+				}
+				if (markers.length == 0)
+					alert("Ничего не найдено!");
+			}
+			
+			map.layers["POI"].getFeatures( func, null, document.getElementById("search_string3").value );
+		}
+	
+		
+	});
+
+</script>
+</body>
+</html>

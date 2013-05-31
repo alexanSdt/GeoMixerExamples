@@ -1,0 +1,63 @@
+<html>
+<head>
+<script src="http://maps.kosmosnimki.ru/api/api.js?key=U92596WMIH" charset="windows-1251"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" media="screen" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css">
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<button id="button">Установка обработчика altKey + onClick</button>
+<br/>
+<div id="map" style="width: 1000px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+<br/>
+
+<script>
+      createFlashMap(document.getElementById("map"), 'maps.kosmosnimki.ru', "7VKHM", function(map) //загружает выборочную карту с того хоста, на котором лежит api.js
+		{
+			map.moveTo(44.340806, 53.225797, 3);//позиционирует карту по координатам центра и выбирает масштаб
+			var myLayer = map.layers["RegionsRF83_pop2"];
+			myLayer.setVisible(true);
+
+			var ourLayer = map;
+			var lastBallonAttr = {};
+
+			function myClick() {
+				var obj = arguments[0];
+				var keyPress = arguments[1];
+				if(!keyPress['altKey']) return false;	//	При click НЕ нажата клавиша: altKey - обычный стандартный балун
+				//	При click нажата клавиша: altKey - совершаем необходимые действия, без балуна
+				showPopUp(obj);
+				return true;
+			};
+
+
+			document.getElementById("button").onclick = function() {
+				lastBallonAttr = {'OnClickSwitcher': myClick, 'disableOnMouseOver': true};
+				myLayer.enableHoverBalloon(null, lastBallonAttr);
+			}
+
+			function showPopUp(obj)
+			{
+				var str = obj.properties['Регион'] || 'Магадан';
+				str = str.replace(/\s+\w+/g, '+');
+				//var surl = 'http://www.google.ru/advanced_search?q=';
+				var surl = 'http://ru.wikipedia.org/wiki/';
+				var txt = '<iframe align="center" width="100%" height="100%" src="' + surl;
+				txt += str + '">';
+				txt += '</iframe>';
+				var $div = $(txt);
+				$div.dialog({title: str, zIndex: 3999, width: 800, height: 600, close: function(){
+					$div.dialog("destroy");
+					if('removeNode' in $div.get(0)) $div.get(0).removeNode(true);
+				}});
+				if($div.get(0)) $div.get(0).style.width = "100%";
+			}
+
+		}); 
+</script>
+</body>
+</html>

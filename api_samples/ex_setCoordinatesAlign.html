@@ -1,0 +1,28 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script> 
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+<br>
+
+<input name="" type="button" id="minimize" value="Масштабная шкала в верхнем правом углу">
+
+<script>
+	createFlashMap(document.getElementById("map"), function(map)
+    {  
+		var button = document.getElementById("minimize");
+			button.onclick = function()
+			{
+				map.setCoordinatesAlign({'align':'tr'});	// Позиционирование масштабной шкалы (tr tl br bl)
+				map.setCopyrightAlign({'align':'bc'});		// Позиционирование Copyright (tr tl br bl bc)
+				map.setGeomixerLinkAlign({'align':'bl'});	// Позиционирование GeomixerLink (tr tl br bl)
+			}
+   });
+</script>
+</body>
+</html>

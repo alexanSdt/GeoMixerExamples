@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script> 
+
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<div id="map" style="width: 600px; height: 400px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+В данном примере координатная сетка включена по умолчанию для переключения видимости сетки используйте 
+<input type="checkbox" id="grid_checkbox" /> <label for="grid_checkbox">"Переключатель видимости"</label>
+<br/>
+</div>
+<script>
+	createFlashMap(
+		document.getElementById("map"), 
+		function(map)
+		{
+			map.setMode("satellite");
+			
+			map.minimizeTools();
+
+			map.grid.setVisible(true); // отображение координатной сетки
+			//map.grid.setOneDegree(true); // отображение координатной сетки через 1 градус
+
+			var checkbox = document.getElementById("grid_checkbox");
+			checkbox.checked = true;
+			checkbox.onclick = function()
+			{
+				var isVisible = map.grid.getVisibility();
+				map.grid.setVisible(!isVisible);
+			}
+		}
+	);
+
+</script>
+</body>
+</html>

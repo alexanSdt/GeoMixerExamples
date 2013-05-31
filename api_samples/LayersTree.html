@@ -1,0 +1,116 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>LayersTree</title>
+<style>
+* {
+    color: #003366;
+    font-family: sans-serif;
+    font-size: 11px;
+    margin: 0;
+    padding: 0;
+}
+body {
+    background-color: #FAFAFE;
+    border: medium none;
+    color: inherit;
+    overflow: hidden;
+}
+
+#flash {
+    width: 50%;
+    margin-left: 50%;
+}
+
+#tree {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+}
+
+.box {
+    float: left;
+}
+
+.invisible, .invisible span, .invisible div, tr td.invisible {
+    color: #999999;
+}
+
+.groupInvisible {
+    display: none;
+}
+
+.layer {
+    cursor: pointer;
+    padding: 0 2px 0 4px;
+    position: relative;
+}
+
+.groupLayer {
+    cursor: pointer;
+    font-weight: bold;
+    margin: 0 0 0 4px;
+}
+
+.swap {
+    height: 5px;
+}
+
+.layerDescription {
+    color: #7D7D8D;
+    margin: 0 5px;
+}
+
+</style>
+<link rel="stylesheet" type="text/css" media="screen" href="../data/css/treeview.css">
+</head>
+<body>
+    <div id="tree"></div>
+    <div id="flash" class="flashMap"></div>
+    <script src="http://maps.kosmosnimki.ru/api/jquery/jquery-1.5.1.min.js"></script>
+    <script src="http://maps.kosmosnimki.ru/api/jquery/jquery.treeview.js"></script>
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset=windows-1251></script>
+    <script src="../lib/FiresTree.js"></script>
+    <script>
+    var globalFlashMap;
+    
+    $(function() {
+        createFlashMap($("#flash")[0], "maps.kosmosnimki.ru", "7VKHM", function(map, tree) {
+			map.moveTo(72.421875, 43.003333, 3);
+
+            globalFlashMap = map;
+                
+            var firesTree = new FiresTree();
+
+            // рисуем все дерево
+            firesTree.drawTree(tree, $("#tree"));
+            
+            // либо находим нужную группу
+            // firesTree.drawGroup(firesTree.findGroup(tree, "1f16ac99619b4cdf"), $("#tree"));
+            
+            // либо находим нужный слой
+            // firesTree.drawLayer(firesTree.findLayer(tree, "18775"), $("#tree"));
+            
+            // либо создаем новую группу 
+            /*var group = {
+                    content: {
+                        properties: {
+                            title: "Новая группа",
+                            GroupID: "1",
+                            visible: true
+                        },
+                        children: [
+                            firesTree.findLayer(tree, "789213E1F02C4BF48217319A84F519C6"),
+                            firesTree.findLayer(tree, "DDFD45A36BF44364B3C8391D3B8EB50C"),
+                            firesTree.findLayer(tree, "3B54CAC1C54345B3B93D49876A4C5C53")
+                        ]
+                    }
+                };
+            
+            firesTree.drawGroup(group, $("#tree"));*/
+			//firesTree.drawGroup(firesTree.findGroup(tree, "9vePb9U5BbByGsf9"), $("#tree"));
+        });        
+    });
+    </script>
+</body>
+</html>
