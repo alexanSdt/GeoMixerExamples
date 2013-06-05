@@ -20,11 +20,11 @@ createFlashMap(
 	"7VKHM",
 	function(map)
 	{
+		window.globalFlashMap = map;
 		map.moveTo(61.764655, 65.488462, 3);
 		var myLayer = map.layers["RegionsRF83_pop2"];
-		myLayer.setVisible(true);
-		window.globalFlashMap = map;
 		updateColors();
+		myLayer.setVisible(true);
 	}
 );
 
@@ -52,6 +52,7 @@ function updateColors()
 		if (i < n)
 			sql += " AND `" + attrName + "` < " + (value + increment);
 		var filter = layer.addObject();
+		filter.setZoomBounds(1, 21);
 		filter.setStyle(
 			{ 
 				fill: { color: color, opacity: 20 + 7*i },
