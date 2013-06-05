@@ -6,9 +6,10 @@
 <title>GeoMixer API - примеры использования</title>
 </head>
 <body>
-<div id="map" style="width: 600px; height: 400px;"></div>
-<br />
-<button id="show_objects">Поместить слой выше</button>
+<div id="map" style="width: 600px; height: 400px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+В данном примере показана операция изменения порядка отображения двух векторных слоев <button id="show_objects">Поменять порядок отображения</button>
+</div>
 <script>
 
 var div = document.getElementById('map');

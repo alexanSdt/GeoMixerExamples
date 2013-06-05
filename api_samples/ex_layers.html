@@ -7,12 +7,12 @@
 </head>
 
 <body>
-<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
-
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+В данном примере по умолчанию включен слой "Точки городов" для переключения видимости используйте<br>
+<input type="checkbox" id="checkbox" checked /> <label for="checkbox">"Отключить/Включить точки городов"</label>
 <br/>
-
-<input type="checkbox" id="checkbox" checked="checked" /> <span class="bodytext">Отключить/включить точки городов</span>
-
+</div>
 
 <script>
 	createFlashMap(document.getElementById("map"), "maps.kosmosnimki.ru", "7VKHM", function(map)//выбирает по ID карту, которую загружает с хоста Maps.Kosmosnimki.Ru

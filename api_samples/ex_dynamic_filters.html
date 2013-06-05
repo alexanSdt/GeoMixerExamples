@@ -5,13 +5,15 @@
 	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script> 
 </head>
 <body>
-
-Раскраска при помощи фильтров стилей: <select id="colors" onchange="updateColors();">
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+В данном примере показано применение фильтров стилей для отображения векторного слоя<br>
+Выбор выринта стилей по: <select id="colors" onchange="updateColors();">
 <option value="0" selected>Численность населения</option>
 <option value="1">Плотность населения</option>
 </select>
+</div>
 
-<div id="map" style="width: 800px; height: 600px;"></div>
 <script>
 
 createFlashMap(

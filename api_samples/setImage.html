@@ -7,11 +7,13 @@
 </head>
 
 <body>
-<button id="button">setImage</button>
-<input type="checkbox" id="margins_checkbox" />
-<label for="margins_checkbox">Убрать черные поля</label>
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+Показан пример трансформации JPG файла по заданному прямоугольнику при помощи команды <button id="button">setImage</button> при необходимости
+ вы можете наложить маску в виде полигона <input type="checkbox" id="margins_checkbox" /> <label for="margins_checkbox">Убрать черные поля</label>
+</div>
+
 <br/>
-<div id="map" style="width: 800px; height: 600px;"></div>
 
 <script> 
 
