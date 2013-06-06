@@ -6,12 +6,14 @@
 </head>
 
 <body>
-<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
-<br/>
-<input type="checkbox" id="checkbox" checked="checked" /> <span class="bodytext">Балун по наведению</span>
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+В данном примере по умолчанию включен режим показа всплывающей подсказки по наведению. Вы можете переключить режим показа
+ <input type="checkbox" id="checkbox" checked="checked" /> <span class="bodytext">Балуна по наведению</span>
+</div>
 
 <script>
-      createFlashMap(document.getElementById("map"), "7VKHM", function(map) //загружает выборочную карту с того хоста, на котором лежит api.js
+      createFlashMap(document.getElementById("map"), "maps.kosmosnimki.ru", "7VKHM", function(map)
 		{
 			map.moveTo(44.340806, 53.225797, 5);//позиционирует карту по координатам центра и выбирает масштаб
 			var myLayer = map.layers["RegionsRF83_pop2"];
