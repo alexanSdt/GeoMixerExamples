@@ -8,8 +8,8 @@
 
 <body>
 
-<div id="map" style="width: 850px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
-<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+<div id="map" style="width: 800px; height: 500px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 200px; overflow: auto; padding-left: 20px;">
 Показан пример создания статического балуна с видео вставкой
 </div>
 
@@ -40,7 +40,7 @@
 					var coords = obj.getGeometry().coordinates;
 					balloon = map.addBalloon();
 					balloon.setPoint(coords[0], coords[1]);
-					balloon.div.innerHTML = '<object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/LEm6Lu04Pck&hl=ru_RU&fs=1&rel=0"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/LEm6Lu04Pck&hl=ru_RU&fs=1&rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>';
+					balloon.div.innerHTML = '<iframe width="420" height="315" src="http://www.youtube.com/embed/MmKITvBaf9o" frameborder="0" allowfullscreen></iframe>';
 					balloon.resize();
 				}
 			}
