@@ -14,38 +14,46 @@
 </div>
 <br/>
 <script>
-      createFlashMap(document.getElementById("map"), "7VKHM", function(map) //загружает выборочную карту с того хоста, на котором лежит api.js
+      createFlashMap(document.getElementById("map"), 'maps.kosmosnimki.ru', "7VKHM", function(map) //загружает выборочную карту с того хоста, на котором лежит api.js
 		{
 			map.moveTo(44.340806, 53.225797, 2);//позиционирует карту по координатам центра и выбирает масштаб
 			var myLayer = map.layers["295894E2A2F742109AB112DBFEAEFF09"];
 			myLayer.setVisible(true);
 
 			var timer = null;
-			var balloonDiv = null;
+			var balloonSpan = null;
 			var places = '';
 			var zone = 0;
 			
 			var setText = function() {
-				if(!balloonDiv) return;
-				var sysDate = new Date();
+				if(!balloonSpan) return;
+				var sysDate = new Date(new Date().getTime() + zone*60*60*1000);
 				var txt = 'Текущее&nbsp;время:&nbsp;<b>';
 				txt += gmxAPI.pad2(sysDate.getUTCDate()) + '.';
 				txt += gmxAPI.pad2(sysDate.getUTCMonth() + 1) + '.';
 				txt += gmxAPI.pad2(sysDate.getUTCFullYear()) + '&nbsp;';
-				txt += gmxAPI.pad2(sysDate.getUTCHours() + zone) + ':';
+				txt += gmxAPI.pad2(sysDate.getUTCHours()) + ':';
 				txt += gmxAPI.pad2(sysDate.getUTCMinutes()) + ':';
 				txt += gmxAPI.pad2(sysDate.getUTCSeconds());
 				txt += '</b>';
 				txt += '<br>places:&nbsp;<b>' + places + '</b>';
 				txt += '<br>zone:&nbsp;<b>' + zone + '</b>';
-				balloonDiv.innerHTML = txt;
+				balloonSpan.innerHTML = txt;
+				//console.log(sysDate);
 			};
 			myLayer.filters[0].enableHoverBalloon(function(o, div) {
 				places = o.properties['places'];
 				zone = parseInt(o.properties['zone'], 10);
-				balloonDiv = div;
+				balloonSpan = gmxAPI.newSpan('');
 				if(!timer) timer = setInterval(setText, 1000);
-				return 'Ожидание...';	// если тип возвращаемого объекта "object" - это признак того что HTML контейнер текста балуна уже заполнен
+				div.appendChild(balloonSpan);
+				o.balloon.addListener('onClose', function(ph) {		// при закрытии балуна отменить обновление времени
+					if(timer) clearInterval(timer);
+					timer = null;
+				});
+				
+				return {};	// если тип возвращаемого объекта "object" - это признак того что HTML контейнер текста балуна уже заполнен
+				//return 'Ожидание...';	// если тип возвращаемого объекта "string" - это текст балуна
 			}, {'disableOnMouseOver': true});
 			// включает всплывающие подсказки , отображающие атрибутивную информацию слоев по выбранному атрибутивному значению
 		}); 
