@@ -6,9 +6,10 @@
 </head>
 
 <body>
-<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
-
-
+<div id="map" style="width: 800px; height: 500px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 200px; overflow: auto; padding-left: 20px;">
+Показан пример вычисления длинны линий в балуне по наведению
+</div>
 
 <script>
         createFlashMap(document.getElementById("map"), "7VKHM", function(map) <!--загружает выборочную карту с того хоста, на котором лежит api.js-->

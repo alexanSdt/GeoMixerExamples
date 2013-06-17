@@ -6,11 +6,10 @@
 </head>
 
 <body>
-<button id="button">Установить событие добавления нового пользовательского объекта на карту</button>
-<button id="button1">Добавить пользовательский объект на карту</button>
-<br/>
-<div id="map" style="width: 860px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
-
+<div id="map" style="width: 800px; height: 500px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 200px; overflow: auto; padding-left: 20px;">
+Показан пример <button id="button">установки обработчика</button> добавления <button id="button1">маркера на карту</button> на карту (с удалением ранее добавленного обьекта)
+</div>
 <script>
       createFlashMap(document.getElementById("map"), function(map)
 																								 

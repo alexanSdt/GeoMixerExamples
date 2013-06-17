@@ -6,17 +6,21 @@
 </head>
 
 <body>
-<button id="button">Установка обработчика onClick на карту</button>
-<br/>
-<div id="map" style="width: 600px; height: 300px;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="map" style="width: 800px; height: 500px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 200px; overflow: auto; padding-left: 20px;">
+Показан пример установки обработчика события для получения координат <button id="button">onClick</button> на карте
+</div>
+
 <script>
 	createFlashMap(document.getElementById("map"), function(map)
 	{   
 	    map.moveTo(44.340806, 53.225797, 5);
 		document.getElementById("button").onclick = function() {
-			map.setHandler("onClick", function() 
+			map.addListener("onClick", function(ph) 
 			{
-				alert(map.getMouseX() + ", " + map.getMouseY() + ", " + map.getZ());
+				var z = map.getZ();
+				var latlng = ph.attr.latlng;
+				alert(latlng.lng + ", " + latlng.lat + ", " + z);
 			});
 		}
 	}); //при клике на карту выводит координаты

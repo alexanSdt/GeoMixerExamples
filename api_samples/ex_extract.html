@@ -6,9 +6,10 @@
 <title>GeoMixer API - примеры использования</title>
 </head>
 <body>
-<button id="show_objects">Получить список объектов видимой области карты</button>
-<br />
-<div id="map" style="width: 600px; height: 400px;"></div>
+<div id="map" style="width: 800px; height: 500px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 200px; overflow: auto; padding-left: 20px;">
+Показан пример получения <button id="show_objects">списка объектов</button> векторного слоя в видимой области карты
+</div>
 <script>
 
 var div = document.getElementById('map');
@@ -40,7 +41,7 @@ createFlashMap(div, "7VKHM", function (map)
 					{
 						var f = features[i];
 						var c = f.getGeometry().coordinates;
-						names.push(f.properties["Организация"] + " (" + c[0] + ", " + c[1] + ")");
+						names.push(f.properties["Организаци"] + " (" + c[0] + ", " + c[1] + ")");
 					}
 					alert(names.join("\n"));
 				},

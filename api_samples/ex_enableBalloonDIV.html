@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
+<title>GeoMixer API - примеры использования</title>
+
+</head>
+
+<body>
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+Показан пример управления HTML контейнером текста всплывающей подсказки
+</div>
+<br/>
+<script>
+      createFlashMap(document.getElementById("map"), "7VKHM", function(map) //загружает выборочную карту с того хоста, на котором лежит api.js
+		{
+			map.moveTo(44.340806, 53.225797, 5);//позиционирует карту по координатам центра и выбирает масштаб
+			var myLayer = map.layers["RegionsRF83_pop2"];
+			myLayer.setVisible(true);
+
+			var timer = null;
+			var balloonDiv = null;
+			var setText = function() {
+				if(!balloonDiv) return;
+				var sysDate = new Date();
+				var txt = 'Текущее&nbsp;время:&nbsp;<b>';
+				txt += gmxAPI.pad2(sysDate.getDate()) + '.';
+				txt += gmxAPI.pad2(sysDate.getMonth() + 1) + '.';
+				txt += gmxAPI.pad2(sysDate.getFullYear()) + '&nbsp;';
+				txt += gmxAPI.pad2(sysDate.getHours()) + ':';
+				txt += gmxAPI.pad2(sysDate.getMinutes()) + ':';
+				txt += gmxAPI.pad2(sysDate.getSeconds());
+				txt += '</b>';
+				balloonDiv.innerHTML = txt;
+			};
+			map.enableHoverBalloon(function(o, div) {
+				balloonDiv = div;
+				if(!timer) timer = setInterval(setText, 1000);
+				return 'Ожидание...';	// если тип возвращаемого объекта "object" - это признак того что HTML контейнер текста балуна уже заполнен
+			}); // включает всплывающие подсказки , отображающие атрибутивную информацию слоев по выбранному атрибутивному значению
+		}); 
+</script>
+</body>
+</html>

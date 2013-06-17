@@ -7,13 +7,13 @@
 </head>
 
 <body>
-<button id="button">Отключить балуны на onClick</button>
-<br/>
-<div id="map" style="width: 1000px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
-<br/>
+<div id="map" style="width: 800px; height: 500px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 200px; overflow: auto; padding-left: 20px;">
+Показан пример отключения пользователем <button id="button">Балунов на onClick</button>
+</div>
 
 <script>
-      createFlashMap(document.getElementById("map"), "7VKHM", function(map) //загружает выборочную карту с того хоста, на котором лежит api.js
+      createFlashMap(document.getElementById("map"), "maps.kosmosnimki.ru", "7VKHM", function(map) //загружает выборочную карту с того хоста, на котором лежит api.js
 		{
 			map.moveTo(44.340806, 53.225797, 3);//позиционирует карту по координатам центра и выбирает масштаб
 
