@@ -46,6 +46,7 @@
 				zone = parseInt(o.properties['zone'], 10);
 				balloonSpan = gmxAPI.newSpan('');
 				if(!timer) timer = setInterval(setText, 1000);
+				setText();
 				div.appendChild(balloonSpan);
 				o.balloon.addListener('onClose', function(ph) {		// при закрытии балуна отменить обновление времени
 					if(timer) clearInterval(timer);
