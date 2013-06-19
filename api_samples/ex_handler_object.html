@@ -8,7 +8,7 @@
 <body>
 <div id="map" style="width: 800px; height: 500px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
 <div id="description" style="width: 200px; overflow: auto; padding-left: 20px;">
-Показан пример <button id="button">установки обработчика</button> добавления <button id="button1">маркера на карту</button> на карту (с удалением ранее добавленного обьекта)
+Показан пример установки обработчика добавления <button id="button1">маркера</button> на карту (с удалением ранее добавленного обьекта)
 </div>
 <script>
       createFlashMap(document.getElementById("map"), function(map)
@@ -20,16 +20,14 @@
 				map.drawing.addObject({ type: "POINT", coordinates: [134.16369 + 0.2*Math.random(), 45.711663 + 0.2*Math.random()]}); //добавляет точечный объект (маркер) на карту
 			}
 
-			document.getElementById("button").onclick = function() {
-			    map.drawing.setHandler("onAdd", function(o) //определяет событие
-				{	
-					 map.drawing.forEachObject(function(o2) // удаляет ранее созданный объект
-					 {
-					   if (o2 != o)
-						 o2.remove(); 
-					});
+			map.drawing.setHandler("onAdd", function(o) //определяет событие
+			{	
+				 map.drawing.forEachObject(function(o2) // удаляет ранее созданный объект
+				 {
+				   if (o2 != o)
+					 o2.remove(); 
 				});
-			}
+			});
        });
 </script>
 </body>

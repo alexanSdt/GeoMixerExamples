@@ -5,11 +5,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>GeoMixer API - примеры использования</title> 
 <body> 
-<button id="button">Установитьна на векторный слой события(onClick,onMouseOver,onMouseOut)</button>&nbsp;&nbsp;<span id="indicator" style="margin-top: 10px;"></span>
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+<div id="indicator">
+</div>
+В данном примере устанавливаются события onMouseOver,onMouseOut,onClick на векторный слой
 <br/>
-
-<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта --> 
- 
+</div> 
 <script> 
 
 createFlashMap(
@@ -22,21 +24,19 @@ createFlashMap(
 		var layer = map.layers["POI_museums_web"];
 		layer.setVisible(true);
 		
-		document.getElementById("button").onclick = function() {
-			layer.setHandler("onClick", function(o)
-			{
-				window.location.href = o.properties["WEB"];
-				return true;
-			});
-			layer.setHandler("onMouseOver", function(o)
-			{
-				document.getElementById("indicator").innerHTML = o.properties["WEB"];
-			});
-			layer.setHandler("onMouseOut", function(o)
-			{
-				document.getElementById("indicator").innerHTML = "";
-			});
-		}
+		layer.setHandler("onClick", function(o)
+		{
+			window.location.href = o.properties["WEB"];
+			return true;
+		});
+		layer.setHandler("onMouseOver", function(o)
+		{
+			document.getElementById("indicator").innerHTML = o.properties["WEB"];
+		});
+		layer.setHandler("onMouseOut", function(o)
+		{
+			document.getElementById("indicator").innerHTML = "";
+		});
 	}
 );
  

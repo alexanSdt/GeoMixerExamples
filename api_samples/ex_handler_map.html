@@ -8,21 +8,22 @@
 <body>
 <div id="map" style="width: 800px; height: 500px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
 <div id="description" style="width: 200px; overflow: auto; padding-left: 20px;">
-Показан пример установки обработчика события для получения координат <button id="button">onClick</button> на карте
+Показан пример установки обработчика события для получения координат по событию onClick на карте
+</div>
+<div id="res">
 </div>
 
 <script>
 	createFlashMap(document.getElementById("map"), function(map)
 	{   
 	    map.moveTo(44.340806, 53.225797, 5);
-		document.getElementById("button").onclick = function() {
-			map.addListener("onClick", function(ph) 
-			{
-				var z = map.getZ();
-				var latlng = ph.attr.latlng;
-				alert(latlng.lng + ", " + latlng.lat + ", " + z);
-			});
-		}
+		map.addListener("onClick", function(ph) 
+		{
+			var z = map.getZ();
+			var latlng = ph.attr.latlng;
+			var st = '<b>' + latlng.lng + ", " + latlng.lat + ", " + z + '</b>';
+			document.getElementById("res").innerHTML = st;
+		});
 	}); //при клике на карту выводит координаты
 </script>
 

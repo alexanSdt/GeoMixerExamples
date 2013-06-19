@@ -29,9 +29,11 @@ createFlashMap(
 		map.moveTo((x1 + x2)/2, (y1 + y2)/2, 9); // перемещает карту в центр данного изображения
 		map.setMode("satellite");
 
+		var o = null;
 		document.getElementById("button").onclick = function()
 		{
-			var o = map.addObject(); // добавляет объект на карту
+			if(o) return;
+			o = map.addObject(); // добавляет объект на карту
 			o.setImage(
 				"../data/img/S4I2L0_309236_120513_merc_x33.jpg",
 				x1, y1, x2, y1, x2, y2, x1, y2
