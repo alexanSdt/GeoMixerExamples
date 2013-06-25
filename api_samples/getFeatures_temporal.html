@@ -6,14 +6,14 @@
 <title>GeoMixer API - примеры использования</title>
 </head>
 <body>
-<table><tbody><tr>
-	<td style="vertical-align: top;">
-		<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
-	</td>
-	<td valign="top">
-		<div id="result"></div>
-	</td>
-</tr></tbody></table>
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+Показан пример <button id="getFeatures">получения всех объектов</button> мультивременного векторного слоя
+<button id="setVisible">Показать слой</button>
+<div id="result" style="">
+</div>
+</div>
+
 <script>
 
 var div = document.getElementById('map');
@@ -24,25 +24,25 @@ createFlashMap(div, 'maps.kosmosnimki.ru', "UIRCQ",
 		map.moveTo(48.109130, 46.660157, 8);
 
 		var myLayer = map.layers['Съёмка'];
-		myLayer.setVisible(false);
-
-		var dt1 = new Date('12/16/2012');
-		var d1 = Math.floor(dt1.getTime() / 1000 - dt1.getTimezoneOffset()*60);
-		var dt2 = new Date('12/17/2012');
-		var d2 = Math.floor(dt2.getTime() / 1000 - dt2.getTimezoneOffset()*60);
-		var f = '"unixTimeStamp" >= ' + d1 + ' AND "unixTimeStamp" <= ' + d2;
-		
-		for (var i = 0; i < myLayer.filters.length; i++) {
-			myLayer.setVisibilityFilter(f);
-		}
-		myLayer.setDateInterval(new Date('01/01/1980'), new Date());
-
-		var callback = function(arr)
+		document.getElementById("setVisible").onclick = function()
 		{
-			console.log('addObserver ' , arr.length);
+			myLayer.setVisible(true);
 		}
-		myLayer.addObserver(callback, {'ignoreVisibilityFilter':true});
-		myLayer.setVisible(true);
+		
+		var geoMerc = { type: "POLYGON", coordinates: [[43, 46, 60, 46, 60, 36, 43, 36]] };
+	
+		document.getElementById("getFeatures").onclick = function()
+		{
+			myLayer.getFeatures(function(features) 
+				{
+					var out = '';
+					var str = 'Слой: <b>' + myLayer.properties.title + '</b> обьектов: ';
+					str += features.length;
+					//alert(str);
+					document.getElementById("result").innerHTML = str;
+				}
+			);
+		}
 	}
 );
 
