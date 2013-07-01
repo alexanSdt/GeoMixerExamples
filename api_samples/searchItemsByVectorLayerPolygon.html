@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script> 
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<p>
+<button id="search">Поиск в точечном векторном слое по ID полигона из другого векторного слоя</button>
+</p>
+  <div id="map2" style="width: 600px; height: 450px;"></div><br/>
+
+<script>
+
+	createFlashMap(document.getElementById("map2"), function(map)
+	{
+		map.moveTo(37.623590, 55.753757, 8);
+		var markers = [];
+		
+		document.getElementById("search").onclick = function()
+		{
+			gmxAPI.sendCrossDomainPostRequest(
+				'http://maps.kosmosnimki.ru/VectorLayer/Search.ashx'
+				, {
+					'WrapStyle': 'window'
+					,'page': 0
+					,'pagesize': 100000
+					,'geometry': true
+					,'query': '[City] = \'Pushkino\''
+					,'layer': 'A89C1F89E7B647D0A86DB589F9522C57'			// слой в котором ищем обьекты
+					,'BorderFromLayer': 'D2422C4EE6E448A096CF210C2107BB8B'	// слой в котором границы поиска
+					,'BorderId': 25											// id обьекта границы поиска
+				}
+				,function(searchReq) {
+					for (var i = 0; i < markers.length; i++)
+						markers[i].remove();
+					markers = [];
+					var ret = [];
+					if (searchReq.Status == 'ok')
+					{
+						var fields = searchReq.Result.fields;
+						var arr = searchReq.Result.values;
+						for (var i = 0, len = arr.length; i < len; i++)
+						{
+							var req = arr[i];
+							var item = {};
+							var prop = {};
+							for (var j = 0, len1 = req.length; j < len1; j++)
+							{
+								var fname = fields[j];
+								var it = req[j];
+								if (fname === 'geomixergeojson') {
+									item.geometry = gmxAPI.from_merc_geometry(it);
+								} else {
+									prop[fname] = it;
+								}
+							}
+							var obj = map.addObject(item.geometry, prop);
+							obj.setStyle(
+								{ marker: { image: "../data/img/search.png", dx: -15, dy: -35 } }, 
+								{ marker: { image: "../data/img/search_a.png", dx: -15, dy: -35 } }
+							);
+							obj.enableHoverBalloon();	
+							markers.push(obj);
+						}
+					}						
+				}
+			);
+		}
+	});
+
+</script>
+</body>
+</html>
