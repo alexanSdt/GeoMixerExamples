@@ -7,7 +7,7 @@
 </head>
 
 <body>
-<p><input name="search3" style="width:400px" id="search_string3" type="text" value="музей истории">&nbsp;&nbsp;<input id="search_button3" value="Поиск по векторному слою" type="submit"></p>
+<p><input name="search3" style="width:400px" id="search_string3" type="text" value="музей">&nbsp;&nbsp;<input id="search_button3" value="Поиск по векторному слою" type="submit"></p>
   <div id="map2" style="width: 600px; height: 450px;"></div><br/>
 <input type="checkbox" id="checkbox_myLayer"> Показать векторный слой
 
@@ -49,7 +49,8 @@
 					alert("Ничего не найдено!");
 			}
 			
-			map.layers["POI"].getFeatures( func, null, document.getElementById("search_string3").value );
+			var str = '[NAME] contains \'' + document.getElementById("search_string3").value + '\'';
+			map.layers["POI"].getFeatures( func, null, str );
 		}
 	
 		
