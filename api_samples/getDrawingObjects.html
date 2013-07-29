@@ -1,0 +1,53 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="http://maps.kosmosnimki.ru/api/api.js?key=U92596WMIH" charset="windows-1251"></script>
+
+</head>
+
+
+<body>
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+В данном примере показана операция <button id="getShapes">"Скачать shp-файл"</button>
+<br/>
+добавленных drawing обьектов
+</div>
+<script>
+        createFlashMap(document.getElementById("map"), function(map) <!--загружает выборочную карту с того хоста, на котором лежит api.js-->
+	{ 
+		map.moveTo(37, 55, 3);
+		
+		document.getElementById("getShapes").onclick = function()
+		{
+			var objectsByType = {}, cnt = 0, markerIdx = 1, fileName = 'markers';
+			var serverScript = 'http://maps.kosmosnimki.ru/Shapefile.ashx';
+
+			map.drawing.forEachObject(function(item) {
+				var type = item.geometry.type;
+				if (!objectsByType[type]) objectsByType[type] = [];
+				
+				if (type == "POINT" && ((item.properties.text == "") || !item.properties.text))
+				{
+					item.properties.text = "marker " + markerIdx;
+					markerIdx++;
+				}
+				objectsByType[type].push({ geometry: item.geometry, properties: item.properties });
+				cnt++;
+			});
+			if(cnt) {
+				gmxAPI.sendCrossDomainPostRequest(serverScript, {
+					name:     fileName,
+					points:   objectsByType["POINT"] ? JSON.stringify(objectsByType["POINT"]) : '',
+					lines:    objectsByType["LINESTRING"] ? JSON.stringify(objectsByType["LINESTRING"]) : '',
+					polygons: objectsByType["POLYGON"] ? JSON.stringify(objectsByType["POLYGON"]) : ''
+				});
+			} else {
+				alert('Drawing обьектов не обнаружено - добавьте обьекты!');
+			}
+		}
+	}); 
+</script>
+
+</body>
+</html>
