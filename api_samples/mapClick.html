@@ -1,0 +1,29 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="http://maps.kosmosnimki.ru/api/api.js?key=U92596WMIH" charset="windows-1251"></script>
+
+</head>
+
+
+<body>
+<div id="map" style="width: 800px; height: 500px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="res">
+</div>
+
+<script>
+	createFlashMap(document.getElementById("map"), "maps.kosmosnimki.ru", "7VKHM", function(map)
+	{   
+		map.layers['B0A30EF77D7F4182B302B9F7CB83CA25'].setVisible(true);
+		map.moveTo(47.460937, 47.886368, 3);
+		i = 0;
+		map.setHandler("onClick", function(ph) 
+		{
+			i++;
+			document.getElementById("res").innerHTML = 'Выполнен клик ' + i + ' на объекте!';
+		});
+	});
+</script>
+
+</body>
+</html>
