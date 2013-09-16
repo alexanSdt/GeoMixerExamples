@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/api.js?key=U92596WMIH" charset="windows-1251"></script> 
+	<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<div id="map" style="width: 1200px; height: 800px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+По клику в объекте слоя "Районы Московской области" находим обьекты из слоя "Населенные пункты" находящиееся в данном районе.
+</div>
+
+<br/>
+
+<script> 
+
+createKosmosnimkiMap(
+	document.getElementById("map"), 
+	"maps.kosmosnimki.ru",
+	"7VKHM",
+	function(map) 
+	{
+		map.moveTo(37.010192, 55.715604, 9); // перемещает карту в центр данного изображения
+		var myLayer = map.layers["A1F7059971454D24B1F4BECDD88160B3"];
+		myLayer.setVisible(true);
+
+        var cont = null;
+
+		var searchFunc = function(regId)
+		{
+            if(!regId) regId = 25;
+			gmxAPI.sendCrossDomainPostRequest(
+				'http://maps.kosmosnimki.ru/VectorLayer/Search.ashx'
+				, {
+					'WrapStyle': 'window'
+					,'page': 0
+					,'pagesize': 100000
+					,'geometry': true
+					,'layer': '306036F1933C43D7832CB1D986B8F682'			// слой в котором ищем обьекты
+					,'BorderFromLayer': 'A1F7059971454D24B1F4BECDD88160B3'	// слой в котором границы поиска
+					,'BorderId': regId								// id обьекта границы поиска
+				}
+				,function(ph) {
+                    if(cont) cont.remove();
+                    cont = map.addObject();
+					var markers = [];
+					var ret = [];
+					if (ph.Status == 'ok')
+					{
+						var fields = ph.Result.fields;
+						var arr = ph.Result.values;
+						for (var i = 0, len = arr.length; i < len; i++)
+						{
+							var req = arr[i];
+							var item = {};
+							var prop = {};
+							for (var j = 0, len1 = req.length; j < len1; j++)
+							{
+								var fname = fields[j];
+								var it = req[j];
+								if (fname === 'geomixergeojson') {
+									item.geometry = gmxAPI.from_merc_geometry(it);
+								} else {
+									prop[fname] = it;
+								}
+							}
+							var obj = cont.addObject(item.geometry, prop);
+							obj.setStyle(
+								{ marker: { image: "../data/img/search.png", dx: -15, dy: -35 } }, 
+								{ marker: { image: "../data/img/search_a.png", dx: -15, dy: -35 } }
+							);
+							obj.enableHoverBalloon();	
+							markers.push(obj);
+						}
+						ok(len === 1 ? true : false, 'VectorLayer/Search.ashx ok');
+					} else if (ph.Status == 'error') {
+                        alert(ph.ErrorInfo.ErrorMessage);
+                    }
+				}
+			);
+		}
+        myLayer.setHandler("onClick", function(o)
+		{
+            searchFunc(o.properties.ogc_fid);
+			return true;
+		});
+        
+	}
+);
+
+</script> 
+
+
+</body>
+</html>
