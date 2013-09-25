@@ -88,56 +88,38 @@
 			var arr = [
 				{
 					'key': "item1",
-					'regularImageUrl': apiBase + "img/move_tool.png",
-					'activeImageUrl': apiBase + "img/move_tool_a.png",
-					'onClick': gmxAPI._drawFunctions['move'],
+					'regularImageUrl': apiBase + "img/1i.png",
+					'activeImageUrl': apiBase + "img/1i.png",
+					'onClick': function() { alert('Click on item1 tool!'); },
 					'onCancel': function() {},
-					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Перемещение", "Move")
+					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Первый tool", "First tool")
 				}
 				,
 				{
 					'key': "item2",
-					'regularImageUrl': apiBase + "img/select_tool.png",
-					'activeImageUrl': apiBase + "img/select_tool_a.png",
-					'onClick': gmxAPI._drawFunctions['zoom'],
+					'regularImageUrl': apiBase + "img/2i.png",
+					'activeImageUrl': apiBase + "img/2i.png",
+					'onClick': function() { alert('Click on item2 tool!'); },
 					'onCancel': function() {},
-					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Увеличение", "Zoom")
+					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Второй tool", "Second tool")
 				}
 				,
 				{
 					'key': "item3",
-					'regularImageUrl': apiBase + "img/marker_tool.png",
-					'activeImageUrl': apiBase + "img/marker_tool_a.png",
-					'onClick': gmxAPI._drawFunctions['POINT'],
+					'regularImageUrl': apiBase + "img/3i.png",
+					'activeImageUrl': apiBase + "img/3i.png",
+					'onClick': function() { alert('Click on item3 tool!'); },
 					'onCancel': function() {},
-					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Маркер", "Marker")
+					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Третий tool", "Third tool")
 				}
 				,
 				{
 					'key': "item4",
-					'regularImageUrl': apiBase + "img/line_tool.png",
-					'activeImageUrl': apiBase + "img/line_tool_a.png",
-					'onClick': gmxAPI._drawFunctions['LINESTRING'],
+					'regularImageUrl': apiBase + "img/4i.png",
+					'activeImageUrl': apiBase + "img/4i.png",
+					'onClick': function() { alert('Click on item4 tool!'); },
 					'onCancel': function() {},
-					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Линия", "Line")
-				}
-				,
-				{
-					'key': "item5",
-					'regularImageUrl': apiBase + "img/polygon_tool.png",
-					'activeImageUrl': apiBase + "img/polygon_tool_a.png",
-					'onClick': gmxAPI._drawFunctions['POLYGON'],
-					'onCancel': function() {},
-					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Полигон", "Polygon")
-				}
-				,
-				{
-					'key': "item6",
-					'regularImageUrl': apiBase + "img/frame_tool.png",
-					'activeImageUrl': apiBase + "img/frame_tool_a.png",
-					'onClick': gmxAPI._drawFunctions['FRAME'],
-					'onCancel': function() {},
-					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Рамка", "Rectangle")
+					'hint': gmxAPI.KOSMOSNIMKI_LOCALIZED("Четвертый tool", "Fourth tool")
 				}
 			];
 			for(var i = 0; i<arr.length; i++) {
