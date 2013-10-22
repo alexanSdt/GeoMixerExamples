@@ -19,7 +19,7 @@
 			map.moveTo(44.340806, 53.225797, 5);//позиционирует карту по координатам центра и выбирает масштаб
 			var myLayer = map.layers["RegionsRF83_pop2"];
 			myLayer.setVisible(true);
-			map.enableHoverBalloon(function(o) { return o.properties['Регион']}); // включает всплывающие подсказки , отображающие атрибутивную информацию слоев по выбранному атрибутивному значению
+			myLayer.enableHoverBalloon(function(o) { return o.properties['Регион']}); // включает всплывающие подсказки , отображающие атрибутивную информацию слоев по выбранному атрибутивному значению
 		}); 
 </script>
 </body>
