@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/api.js?key=U92596WMIH" charset="windows-1251"></script> 
+	<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<div id="map" style="float: left; width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="float: left; overflow: auto; padding-left: 20px;">
+Показан пример трансформации изображения по заданным 4 точкам при помощи команды <b>setImageTransform</b>
+<br>при необходимости можно изменить точки привязки(<span style="color: red">красный контур</span>).
+</div>
+<script> 
+
+createKosmosnimkiMap(
+	document.getElementById("map"), 
+	function(map) 
+	{
+		var x1 = 136.59558;
+		var y1 = 56.344192;
+		var x2 = 137.8782;
+		var y2 = 55.613245;
+		map.moveTo((x1 + x2)/2, (y1 + y2)/2, 9); // перемещает карту в центр обьекта
+		map.setMode("satellite");
+
+        var tl = [x1, y1];  // Top Left точка привязки
+        var tr = [x2, y1];  // Top Right точка привязки
+        var br = [x2, y2];  // Bottom Right точка привязки
+        var bl = [x1, y2];  // Bottom Left точка привязки
+
+        // Обьект изображения
+        var obj = map.addObject();
+        var imgURL = "../data/img/S4I2L0_309236_120513_merc_x33.jpg";   // URL изображения
+        var opacity = 80;   // яркость обьекта
+
+        var setImageTransform = function(op) {   // Перерисовка изображения
+            if(!op) op = 100;
+            obj.setStyle({fill: {opacity: op}});
+            obj.setImageTransform(imgURL, tl[0], tl[1], tr[0], tr[1], br[0], br[1], bl[0], bl[1]);
+        }
+
+        // drawing для редактирования точек привязки
+        var drawing = map.drawing.addObject({"type":"POLYGON","coordinates":[[tl, tr, br, bl, tl]]}
+            ,null
+            , {
+                skipFrame: true     // Отменить представление drawing обьекта FRAME геометрией 
+                ,maxPoints: 4       // Ограничить макс.количество точек в геометрии drawing обьекта
+            }
+        );
+        drawing.setStyle({outline: {color: 0xff0000}});
+        var evID = null;
+        drawing.addListener('onFinish', function(item) {    // Изменим яркость по окончанию редактирования
+            opacity = 80;
+            setImageTransform(opacity);
+        });
+        drawing.addListener('onEdit', function(item) {      // Изменение точек привязки при редактировании
+            var coords = item.geometry.coordinates[0];
+            tl = coords[0], tr = coords[1];
+            br = coords[2], bl = coords[3];
+            setImageTransform(opacity);
+            opacity = 50;
+        });
+
+        setImageTransform(opacity);
+    }
+);
+
+</script> 
+
+
+</body>
+</html>

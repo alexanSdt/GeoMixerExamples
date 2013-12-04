@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
+
+</head>
+
+
+<body>
+<div id="map" style="width: 800px; height: 600px;"></div> <!--задаем контейнер, в который загружается карта -->
+<script>
+        createFlashMap(document.getElementById("map"), function(map) <!--загружает выборочную карту с того хоста, на котором лежит api.js-->
+	{ 
+		map.moveTo(37, 55, 3);
+
+        var o = map.addObject({
+            type: "MULTIPOINT",
+            coordinates: [
+                [38.4960,57.0247],[35.5078,53.0937],[42.3632,50.7020],[48.3398,52.5613],[45.3515,56.6393],[38.5960,57.0247],
+                [59.59898,55.1581],[59.4140,49.6865],[70.4882,50.0274],[65.9179,55.2586],[59.5898,55.1581]
+            ]
+        });
+        o.setStyle({
+            outline: {color: 0x0000ff, thickness: 2}
+            ,marker: {circle: 10}
+            ,
+			fill: {
+				color: 0xff0000,
+				opacity: 50
+			}
+        });
+	}); 
+</script>
+
+</body>
+</html>
