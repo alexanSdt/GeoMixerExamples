@@ -9,9 +9,10 @@
 <body>
 <div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
 <div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
-Показан пример изменения текста всплывающей подсказки сформированной на основе стандартного шаблона
+Показан пример дополнительной обработки текста всплывающей подсказки сформированной на основе стандартного шаблона
  - после применения команды <button id="runme">addBalloonHook</button>
  будет произведено выборочное изменение атрибутов всплывающей подсказки.
+Отменить дополнительную обработку можно применив команду  <button id="disableme">removeBalloonHook</button>
 </div>
 	<script>
 
@@ -43,6 +44,11 @@
                     links += ' <a href="http://geomixer.ru" target="_blank">4</a>';
                     mylink.innerHTML = links;
                 }, ph);
+            }
+
+            document.getElementById("disableme").onclick = function()
+            {
+                layer.removeBalloonHook();
             }
 		});
 	</script>
