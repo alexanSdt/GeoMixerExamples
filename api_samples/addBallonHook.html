@@ -1,0 +1,50 @@
+<html>
+<head>
+<script src="http://maps.kosmosnimki.ru/api/api.js?key=U92596WMIH" charset="windows-1251"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<title>GeoMixer API - пример использования команды добавления массива векторных объектов на карту</title>
+</head>
+
+<body>
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+Показан пример изменения текста всплывающей подсказки сформированной на основе стандартного шаблона
+ - после применения команды <button id="runme">addBalloonHook</button>
+ будет произведено выборочное изменение атрибутов всплывающей подсказки.
+</div>
+	<script>
+
+		createKosmosnimkiMap(document.getElementById("map"), 'maps.kosmosnimki.ru', '7VKHM', function(map)
+		{
+			map.moveTo(40.41, 64.79, 3);//позиционирует карту по координатам центра и выбирает масштаб
+
+            var layer = map.layers["POI_museums_web"];
+            layer.setVisible(true);
+
+            document.getElementById("runme").onclick = function()
+            {
+                var ph = {
+                    'ГОРОД': '<span id="city" style="color: blue; cursor: pointer;">[ГОРОД]</span>',
+                    'WEB': '<a href="[WEB]" target="_blank">[WEB]</a>',
+                    'mylink': '<span id="mylink"></span>'
+                };
+                layer.addBalloonHook(function(o, div) {
+                    var span = div.getElementsByTagName("span");
+                    var city = span['city'];
+                    city.onclick = function(ev) {
+                        alert('ГОРОД: ' + city.textContent);
+                    }
+                    var mylink = span['mylink'];
+                    mylink.style.fontSize = 20;
+                    var links = 'Cсылки: <a href="http://kosmosnimki.ru" target="_blank">1</a>';
+                    links += ' <a href="http://maps.kosmosnimki.ru" target="_blank">2</a>';
+                    links += ' <a href="http://search.kosmosnimki.ru" target="_blank">3</a>';
+                    links += ' <a href="http://geomixer.ru" target="_blank">4</a>';
+                    mylink.innerHTML = links;
+                }, ph);
+            }
+		});
+	</script>
+</body>
+</html>
