@@ -25,26 +25,27 @@
 
             document.getElementById("runme").onclick = function()
             {
-                var flag = layer.addBalloonHook('mylink', function(o, div, id) {
-                    var span = div.getElementsByTagName("span");
-                    var mylink = span[id];
-                    mylink.style.fontSize = 20;
+                var flag = layer.addBalloonHook('mylink', function(o, div, node) {
+                    if(!node) return;
+                    node.style.fontSize = 20;
                     var links = 'Cсылки: <a href="http://kosmosnimki.ru" target="_blank">1</a>';
                     links += ' <a href="http://maps.kosmosnimki.ru" target="_blank">2</a>';
                     links += ' <a href="http://search.kosmosnimki.ru" target="_blank">3</a>';
                     links += ' <a href="http://geomixer.ru" target="_blank">4</a>';
-                    mylink.innerHTML = links;
+                    node.innerHTML = links;
                 });
                 console.log('addBalloonHook for "mylink" - ' + flag ? 'true' : 'false');
 
-                flag = layer.addBalloonHook('ГОРОД', function(o, div, id) {
-                    var span = div.getElementsByTagName("span");
-                    var city = span[id];
-                    city.onclick = function(ev) {
-                        alert('ГОРОД: ' + city.textContent);
+                flag = layer.addBalloonHook('ГОРОД', function(o, div, node) {
+                    if(!node) return;
+                    node.onclick = function(ev) {
+                        alert('ГОРОД: ' + node.textContent);
                     }
                 });
                 console.log('addBalloonHook for "ГОРОД" - ' + flag ? 'true' : 'false');
+                flag = layer.addBalloonHook('ГОРОД1', function(o, div, node) {
+                    if(!node) console.log('addBalloonHook for "ГОРОД1" - not found');
+                });
             }
 
             document.getElementById("disableme").onclick = function()
