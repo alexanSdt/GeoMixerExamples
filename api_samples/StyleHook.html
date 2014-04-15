@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/api.js?key=U92596WMIH" charset="windows-1251"></script> 
+</head>
+<body>
+<div id="map" style="width: 800px; height: 600px; float: left;"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+Показан пример переопределения стилей отображения объектов векторного слоя.
+<br>После выбора режима <button id="setStyleHook">setStyleHook</button> - по нажатию мыши на обьекте устанавливается пользовательский стиль данного объекта.
+</div>
+
+<script>
+
+createKosmosnimkiMap(
+	document.getElementById("map"),
+	"maps.kosmosnimki.ru",
+	"7VKHM",
+	function(map)
+	{
+		map.moveTo(37.430419, 55.676823, 7);
+		var myLayer = map.layers['Районы Московской области'];
+		myLayer.setVisible(true);
+
+		document.getElementById("setStyleHook").onclick = function() {
+            var style = {
+               fill: { color: 0xff0000, opacity: 50 },
+               outline: { color: 0x00ff00, opacity: 100, thickness: 1 }
+            };
+
+            var selectedItems = {};
+            myLayer.addListener('onMouseDown', function(event) {
+                var id = event.obj.objectId;
+                if (selectedItems[id]) delete selectedItems[id];
+                else selectedItems[id] = style;
+            });
+            
+            myLayer.setStyleHook(function (data) {
+               return (selectedItems[data.id] ? selectedItems[data.id] : null);
+            });
+        }
+	}
+);
+
+</script>
+
+</body>
+</html>
