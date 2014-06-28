@@ -1,7 +1,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script>
+<script src="http://maps.kosmosnimki.ru/api/api.js?key=U92596WMIH" charset="windows-1251"></script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
 
@@ -28,8 +28,9 @@ for (var i=0; i<disabledZoom.length; i++)
 
 		document.getElementById("button1").onclick = function()
 		{
-			var beginMode = map.getMode();
-			var beginZ = 0;
+			var blm = map.baseLayersManager,
+                beginZ = 0,
+                beginMode = 'OSM';
 
 			function chkObjects()
 			{
@@ -38,14 +39,12 @@ for (var i=0; i<disabledZoom.length; i++)
 					if(curZ == beginZ || curZ != Math.floor(curZ)) return;	// только полные изменения Z 
 
 					beginZ = curZ;
-					var currentBaseLayerName = map.getCurrentBaseLayerName();
-					var currMode = map.getMode();
+					var currMode = blm.getCurrentID();
 					if(disabledZoomHash[curZ]) {
-						if(currentBaseLayerName != '') map.unSetBaseLayer();
+						if(currMode) blm.setCurrentID('');
 					} else {
-						if(currentBaseLayerName == '') map.setMode(beginMode);
+						if(!currMode) blm.setCurrentID(beginMode);
 					}
-					if(currMode != '') beginMode = currMode;
 				}
 			}
 			var listenerID = map.addListener("positionChanged", chkObjects);
