@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GeoMixer API - пример iframe</title>
+    <style>
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+            margin: 0px;
+        }
+        #myIframe {
+            position: absolute;
+            top: 100px;
+            left: 100px;
+        }
+        #infoPanel {
+            position: absolute;
+			left: 0px;
+			right: 0px;
+			top: 21px;
+            text-align: center;
+			z-index: 1;
+        }
+        
+        #info {
+			background-color: #ffffff;
+			border-radius: 5px;
+            box-shadow: 0 1px 7px rgba(0,0,0,0.65);
+            padding: 10px;
+        }
+    </style>
+<script src="http://maps.kosmosnimki.ru/api/api.js?key=U92596WMIH" charset="windows-1251"></script>
+
+</head>
+
+<body>
+<div id="map"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="infoPanel">
+    <span id="info">
+        <button id="addIframe">Добавить</button> карту в IRAME
+    </span>
+</div>
+	<script>
+		createKosmosnimkiMap(document.getElementById("map"), 'maps.kosmosnimki.ru', '7VKHM', function(map)
+		{
+			map.moveTo(40.41, 64.79, 3);//позиционирует карту по координатам центра и выбирает масштаб
+		});
+        
+        document.getElementById("addIframe").onclick = function()
+        {
+            document.getElementById("myIframe").innerHTML = '<iframe src="http://scanex.github.io/GeoMixerExamples/api_samples/setImage.html"  width="820" height="610" frameborder="0" style="overflow: hidden;"></iframe>';
+        }
+
+	</script>
+<div id="myIframe"></div>
+</body>
+</html>
