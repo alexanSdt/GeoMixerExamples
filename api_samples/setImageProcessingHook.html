@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script src="http://maps.kosmosnimki.ru/api/api.js?key=U92596WMIH" charset="windows-1251"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<title>GeoMixer API - пример использования команды добавления массива векторных объектов на карту</title>
+    <style>
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+            margin: 0px;
+        }
+        #infoPanel {
+            position: absolute;
+			left: 0px;
+			right: 0px;
+			top: 21px;
+            text-align: center;
+			z-index: 1;
+        }
+        
+        #info {
+			background-color: #ffffff;
+			border-radius: 5px;
+            box-shadow: 0 1px 7px rgba(0,0,0,0.65);
+            padding: 10px;
+        }
+        
+        .leaflet-gmx-icon-myButton {
+            background-image: url("../src/img/gmxIcons.png");
+            background-position: -627px -33px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            clear: none;
+            float: left;
+            margin-left: 6px !important;
+        }
+        .leaflet-gmx-icon-myButton:hover, .leaflet-gmx-icon-myButton-active {
+            background-position: -627px -2px;
+        }
+        #result {
+            background-color: slategray;
+            color: white;
+			border-radius: 5px;
+            box-shadow: 0 1px 7px rgba(0,0,0,0.65);
+            padding: 3px;
+            display: none;
+            width: 100px;
+        }
+        #controls {
+            position: absolute;
+			right: 10px;
+			top: 11px;
+			z-index: 1;
+			background-color: #ffffff;
+			border-radius: 5px;
+            box-shadow: 0 1px 7px rgba(0,0,0,0.65);
+        }
+        
+        #controls button {
+            border-radius: 5px;
+            
+        }
+        
+        #controls > div{
+            padding: 6px;
+        }
+    </style>
+
+</head>
+
+<body>
+<div id="map"></div> <!--задаем контейнер, в который загружается карта -->
+<div id="controls">
+    <div>
+        <button id="prev">Prev day</button>
+        <button id="next">Next day</button>
+        <span id="timeInfo"></span>
+    </div>
+    <div>
+        <button id="dayFilter">Day flybys</button>
+        <button id="nightFilter">Night flybys</button>
+        <button id="noneFilter">All flybys</button>
+    </div>
+</div>
+<div id="description" style="width: 400px; overflow: auto; padding-left: 20px;">
+Показан пример дополнительной обработки тайлов КР(каталога растров)
+</div>
+	<script>
+
+		createKosmosnimkiMap(document.getElementById("map"), 'maps.kosmosnimki.ru', 'AZR6A', function(map)
+		{
+			map.moveTo(40.41, 64.79, 3);//позиционирует карту по координатам центра и выбирает масштаб
+            var layerID = 'EB271FC4D2AD425A9BAA78ADEA041AB9';
+            map.layers.map(function(item) {
+                item.setVisible(false);
+            });
+            var startDate = new Date('2013/03/21');
+            var oneDay = 1000*60*60*24,	// milliseconds in one day
+                now = startDate.getTime(),
+                ddt1 = new Date( now - now % oneDay - oneDay), //beginning of the previous UTC day
+                ddt2 = new Date(ddt1.getTime() + oneDay); //beginning of the current UTC day
+
+            var updateInfo = function(currentDate) {
+                var zz = function(x) { return x < 10 ? "0" + x : x}
+                var dateStr = zz(currentDate.getUTCDate()) + '.' + zz(currentDate.getUTCMonth() + 1) + '.' + zz(currentDate.getUTCFullYear());
+                document.getElementById('timeInfo').innerHTML = dateStr;
+            }
+            
+            updateInfo(ddt1);
+
+            var modisLayer = map.layers[layerID];
+            var logo = new Image();
+            logo.src = '../data/img/geomixer_transpar.png';
+
+            modisLayer.setImageProcessingHook(function(img, attrs) {
+                (function() {
+                    var callback = attrs.callback,
+                        image = img;
+                    setTimeout(function() {
+                        var canvas = document.createElement('canvas');
+                        canvas.width = canvas.height = 256;
+                        var ctx = canvas.getContext('2d');
+                        ctx.drawImage(image, 0, 0);
+                        var pattern = ctx.createPattern(logo, "no-repeat");
+                        ctx.fillStyle = pattern;
+                        ctx.fillRect(0, 0, 255, 255);
+                        callback(canvas);
+                    }, 10);
+                })();
+               
+                return null;
+            }, 'anonymous') ; 
+
+            modisLayer.setDateInterval(ddt1, ddt2);
+            modisLayer.setVisible(true);
+            //controls
+            document.getElementById("prev").onclick = function() {
+                ddt1 = new Date(ddt1.getTime() - oneDay);
+                ddt2 = new Date(ddt2.getTime() - oneDay);
+                modisLayer.setDateInterval(ddt1, ddt2);
+                updateInfo(ddt1);
+            }
+            
+            document.getElementById("next").onclick = function() {
+                ddt1 = new Date(ddt1.getTime() + oneDay);
+                ddt2 = new Date(ddt2.getTime() + oneDay);
+                modisLayer.setDateInterval(ddt1, ddt2);
+                updateInfo(ddt1);
+            }
+            
+            //var IsDayIndex = 'IsDay';
+            document.getElementById("dayFilter").onclick = function() {
+                modisLayer.setVisibilityFilter("IsDay = 'True'");
+            }
+            
+            document.getElementById("nightFilter").onclick = function() {
+                modisLayer.setVisibilityFilter("IsDay != 'True'");
+            }
+            document.getElementById("noneFilter").onclick = function() {
+                modisLayer.setVisibilityFilter('');
+            }
+		});
+	</script>
+</body>
+</html>
