@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://localhost/api/api.js?key=U92596WMIH" charset="windows-1251"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<title>GeoMixer API - пример использования команды добавления массива векторных объектов на карту</title>
+<style>
+    html, body, #map {
+        height: 100%;
+        margin: 0px;
+    }
+        
+    #infoPanel {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        top: 21px;
+        text-align: center;
+        z-index: 1;
+    }
+    
+    #info {
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0 1px 7px rgba(0,0,0,0.65);
+        padding: 10px;
+    }
+    .leaflet-popup-content {
+        word-wrap: break-word;
+    }
+</style>
+
+</head>
+
+<body>
+<div id="map"></div>
+<div id="infoPanel">
+    <span id="info">
+            Показан пример выбора атрибута отображаемого в странице статистики 
+<select id="extFile">
+    <option>column3D</option>
+    <option>columnCylinders</option>
+    <option>pieDonut3D</option>
+</select>
+            при помощи внешней библиотеки.
+    </span>
+</div>
+	<script>
+        var prefixExtFile = "charts/samples/";
+        var fileName = "column3D";
+        document.getElementById("extFile").onchange = function() {
+            fileName = this.options[this.selectedIndex].value;
+        }
+
+		createKosmosnimkiMap(document.getElementById("map"), 'maps.kosmosnimki.ru', '7VKHM', function(map)
+		{
+			map.moveTo(79.41, 69.79, 3);//позиционирует карту по координатам центра и выбирает масштаб
+            var layer = map.layers["D2422C4EE6E448A096CF210C2107BB8B"];
+
+            var arr = ['Миграц_при', 'Естеств_пр', 'Отн_естест', 'Отн_миграц', 'Отн_прирос', 'Плотность', 'Прирост', 'Численност', 'Площадь'];
+            for (var i = 0, len = arr.length; i < len; i++) {
+                (function() {    
+                    var key = arr[i];
+                    layer.addBalloonHook(key, function(o, div, node) {
+                        node.innerHTML = o.properties[key] + ' статистика';
+                        node.style.color = 'blue';
+                        node.onclick = function(ev) {
+                            var items = layer.getItems();
+                            window.getData = function(ev) { return {data: items, keys: arr, name: key}};
+                            var win = window.open(prefixExtFile + fileName + ".html", "_blank", "resizable=yes,scrollbars=yes");
+//console.log('addBalloonHook - ', items);
+                            //alert(key + ': ' + node.textContent);
+                        }
+                    });
+                })();
+                //console.log('addBalloonHook for "ГОРОД" - ' + flag ? 'true' : 'false');
+            }
+            layer.setVisible(true);
+		});
+	</script>
+</body>
+</html>
