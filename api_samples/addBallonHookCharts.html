@@ -55,7 +55,7 @@
 
 		createKosmosnimkiMap(document.getElementById("map"), 'maps.kosmosnimki.ru', '7VKHM', function(map)
 		{
-			map.moveTo(79.41, 69.79, 3);//позиционирует карту по координатам центра и выбирает масштаб
+			map.moveTo(79.41, 69.79, 3);
             var layer = map.layers["D2422C4EE6E448A096CF210C2107BB8B"];
 
             var arr = ['Миграц_при', 'Естеств_пр', 'Отн_естест', 'Отн_миграц', 'Отн_прирос', 'Плотность', 'Прирост', 'Численност', 'Площадь'];
@@ -65,16 +65,14 @@
                     layer.addBalloonHook(key, function(o, div, node) {
                         node.innerHTML = o.properties[key] + ' статистика';
                         node.style.color = 'blue';
+                        node.style.cursor = 'pointer';
                         node.onclick = function(ev) {
                             var items = layer.getItems();
                             window.getData = function(ev) { return {data: items, keys: arr, name: key}};
                             var win = window.open(prefixExtFile + fileName + ".html", "_blank", "resizable=yes,scrollbars=yes");
-//console.log('addBalloonHook - ', items);
-                            //alert(key + ': ' + node.textContent);
                         }
                     });
                 })();
-                //console.log('addBalloonHook for "ГОРОД" - ' + flag ? 'true' : 'false');
             }
             layer.setVisible(true);
 		});
