@@ -112,6 +112,7 @@ html, body, #map {
                var graph1 = new AmCharts.AmGraph();
                graph1.valueAxis = valueAxis1; // we have to indicate which value axis should be used
                graph1.title = "red";
+               graph1.color = graph1.bulletColor = graph1.lineColor = "red";
                graph1.valueField = "red";
                graph1.bullet = "round";
                graph1.hideBulletsCount = 30;
@@ -122,6 +123,7 @@ html, body, #map {
                var graph2 = new AmCharts.AmGraph();
                graph2.valueAxis = valueAxis1; // we have to indicate which value axis should be used
                graph2.title = "green";
+               graph2.color = graph2.bulletColor = graph2.lineColor = "green";
                graph2.valueField = "green";
                graph2.bullet = "square";
                graph2.hideBulletsCount = 30;
@@ -132,6 +134,7 @@ html, body, #map {
                var graph3 = new AmCharts.AmGraph();
                graph3.valueAxis = valueAxis1; // we have to indicate which value axis should be used
                graph3.valueField = "blue";
+               graph3.color = graph3.bulletColor = graph3.lineColor = "blue";
                graph3.title = "blue";
                graph3.bullet = "triangleUp";
                graph3.hideBulletsCount = 30;
@@ -142,7 +145,8 @@ html, body, #map {
                graph4.valueAxis = valueAxis1; // we have to indicate which value axis should be used
                graph4.valueField = "luminance";
                graph4.title = "luminance";
-               graph4.bullet = "triangleUp";
+               graph4.color = graph4.bulletColor = graph4.lineColor = "gray";
+               graph4.bullet = "triangleDown";
                graph4.hideBulletsCount = 30;
                graph4.bulletBorderThickness = 1;
                chart.addGraph(graph4);
