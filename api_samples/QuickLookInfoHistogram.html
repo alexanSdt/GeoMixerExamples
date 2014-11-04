@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>QuickLookInfo</title>
+        <link rel="stylesheet" href="charts/samples/style.css" type="text/css">
+        <script src="charts/amcharts/amcharts.js" type="text/javascript"></script>
+        <script src="charts/amcharts/serial.js" type="text/javascript"></script>
+        <script src="charts/emage.js"></script>
+
+<style>
+html, body, #map {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+}
+
+#histogram {
+    height: 500px;
+    width: 100%;
+}
+</style>
+</head>
+<body>
+        <table cellspacing="0" border="0" id="QuickLookInfo_FV" style="border-collapse:collapse;">
+	<tr>
+		<td colspan="2" id="info">
+            </td>
+	</tr>
+	<tr>
+		<td id="quickLook_IMG">
+        </td>
+		<td id="histogram" style="vertical-align: top; width: 500px;">
+            <div id="chartdiv" style="width: 100%; height: 400px;">
+            </div>
+        </td>
+	</tr>
+</table>
+
+<script type="text/javascript">
+    var contImg = document.getElementById("quickLook_IMG");
+   
+    var prefixJSON = 'http://search.kosmosnimki.ru/QuicklooksJson.ashx?id=',
+        prefixIMG = 'http://search.kosmosnimki.ru/QuickLookImage.ashx?id=',
+        file = 'SP5_086228_1408300809348_1A';
+    var arr = [
+        'image.jpg'
+        ,'t1.jpg'
+        ,'t2.jpg'
+    ];
+    
+    var histogram = new emage.Histogram();
+    histogram.downSample = 1/8;
+
+    function show(item) {
+        file = item.id;
+        var arr = item.date.split('-');
+        var date = arr[2] + '.' + arr[1] + '.' + arr[0];
+        var str = '<table>' +
+            '<tr><td>' + 'Спутник: <b>' + item.sat_name + '</b></td><td /><td />' +
+            '<td>' + 'Дата съемки: <b>' + date + '</b></td><td /><td />' +
+            '<td>' + 'Облачность: <b>' + item.cloud_cover + '%</b></td><td /><td />' +
+            '<td>' + 'Угол съемки: <b>' + item.off_nadir + '°</b></td><td /><td />' +
+            '<td>' + 'Стереопара: <b>' + (item.stereo ? 'да' : 'нет') + '</b></td><td /><td />' +
+            '<td>' + 'ID: <b>' + file + '</b></td><td /><td />' +
+            '</tr></table>';
+        document.getElementById("info").innerHTML = str;
+        
+        var img = new Image(),
+            name = "histogram_" + file;
+
+        img.onload = function(){
+            //console.profile(name);
+            histogram.update(img);
+            //console.profileEnd(name);
+            //console.log(name + ": ", JSON.parse(JSON.stringify(histogram.channels)));
+            
+           var chart;
+           var chartData = [];
+
+           AmCharts.ready(function () {
+               // generate some random data first
+               generateChartData(histogram.channels);
+
+               // SERIAL CHART
+               chart = new AmCharts.AmSerialChart();
+               chart.pathToImages = "charts/amcharts/images/";
+               chart.dataProvider = chartData;
+               chart.categoryField = "date";
+
+               // listen for "dataUpdated" event (fired when chart is inited) and call zoomChart method when it happens
+               chart.addListener("dataUpdated", zoomChart);
+
+               // AXES
+               // category
+               var categoryAxis = chart.categoryAxis;
+               //categoryAxis.parseDates = true; // as our data is date-based, we set parseDates to true
+               //categoryAxis.minPeriod = "DD"; // our data is daily, so we set minPeriod to DD
+               //categoryAxis.minorGridEnabled = true;
+               categoryAxis.axisColor = "#DADADA";
+               //categoryAxis.twoLineMode = true;
+
+               // first value axis (on the left)
+               var valueAxis1 = new AmCharts.ValueAxis();
+               valueAxis1.axisColor = "#FF6600";
+               valueAxis1.axisThickness = 2;
+               valueAxis1.gridAlpha = 0;
+               chart.addValueAxis(valueAxis1);
+
+               // GRAPHS
+               // first graph
+               var graph1 = new AmCharts.AmGraph();
+               graph1.valueAxis = valueAxis1; // we have to indicate which value axis should be used
+               graph1.title = "red";
+               graph1.valueField = "red";
+               graph1.bullet = "round";
+               graph1.hideBulletsCount = 30;
+               graph1.bulletBorderThickness = 1;
+               chart.addGraph(graph1);
+
+               // second graph
+               var graph2 = new AmCharts.AmGraph();
+               graph2.valueAxis = valueAxis1; // we have to indicate which value axis should be used
+               graph2.title = "green";
+               graph2.valueField = "green";
+               graph2.bullet = "square";
+               graph2.hideBulletsCount = 30;
+               graph2.bulletBorderThickness = 1;
+               chart.addGraph(graph2);
+
+               // third graph
+               var graph3 = new AmCharts.AmGraph();
+               graph3.valueAxis = valueAxis1; // we have to indicate which value axis should be used
+               graph3.valueField = "blue";
+               graph3.title = "blue";
+               graph3.bullet = "triangleUp";
+               graph3.hideBulletsCount = 30;
+               graph3.bulletBorderThickness = 1;
+               chart.addGraph(graph3);
+               // 4 graph
+               var graph4 = new AmCharts.AmGraph();
+               graph4.valueAxis = valueAxis1; // we have to indicate which value axis should be used
+               graph4.valueField = "luminance";
+               graph4.title = "luminance";
+               graph4.bullet = "triangleUp";
+               graph4.hideBulletsCount = 30;
+               graph4.bulletBorderThickness = 1;
+               chart.addGraph(graph4);
+
+               // CURSOR
+               var chartCursor = new AmCharts.ChartCursor();
+               chartCursor.cursorAlpha = 0.1;
+               chartCursor.fullWidth = true;
+               chart.addChartCursor(chartCursor);
+
+               // SCROLLBAR
+               var chartScrollbar = new AmCharts.ChartScrollbar();
+               chart.addChartScrollbar(chartScrollbar);
+
+               // LEGEND
+               var legend = new AmCharts.AmLegend();
+               legend.marginLeft = 110;
+               legend.useGraphSettings = true;
+               chart.addLegend(legend);
+
+               // WRITE
+               chart.write("chartdiv");
+           });
+            // generate some random data, quite different range
+            function generateChartData(pt) {
+               for (var i = 0; i < 256; i++) {
+                   chartData.push({
+                       date: i,
+                       red: pt.red[i],
+                       green: pt.green[i],
+                       blue: pt.blue[i],
+                       luminance: pt.luminance[i]
+                   });
+               }
+            }
+
+           // this method is called when chart is first inited as we listen for "dataUpdated" event
+           function zoomChart() {
+               // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+               //chart.zoomToIndexes(10, 20);
+           }
+            
+        }
+        img.crossOrigin = 'anonymous';
+        img.src = prefixIMG + file;
+        contImg.appendChild(img);
+    }
+    function loadInfo(item, callback, callbackError) {
+        if (!item && callback) {
+            callback(item);
+            return;
+        }
+        var script = document.createElement("script");
+        script.setAttribute("charset", item.charset || "windows-1251");
+        script.setAttribute("src", item.src);
+        item.readystate = 'loading';
+        script.onload = function(ev) {
+            var count = 0;
+            if(item.count) count = item.count--;
+            if(count === 0) item.readystate = 'loaded';
+            if(callback) callback(item);
+            else if(item.callback) item.callback(item);
+            document.getElementsByTagName("head").item(0).removeChild(script);
+        };
+        script.onerror = function(ev) {
+            item.readystate = 'error';
+            if(item.callbackError) item.callbackError(item);
+            document.getElementsByTagName("head").item(0).removeChild(script);
+        };
+        document.getElementsByTagName("head").item(0).appendChild(script);
+    }
+    window.jsonLoaded = function(item) {
+        if (item.Status === 'ok' && item.Result.length) {
+            show(item.Result[0]);
+        } else {
+        }
+    };
+    
+	var id = (/id=([a-zA-Z0-9]+)/).exec(window.location);
+    if (id) file = id;
+    
+    loadInfo({
+        src: prefixJSON + file + '&WrapStyle=func&CallbackName=jsonLoaded'
+    });
+</script>
+</body>
+</html>
