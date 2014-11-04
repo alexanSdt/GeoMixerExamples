@@ -222,6 +222,7 @@ html, body, #map {
         if (item.Status === 'ok' && item.Result.length) {
             show(item.Result[0]);
         } else {
+            document.getElementById("info").innerHTML = 'Не найден QuickLook!';
         }
     };
     
