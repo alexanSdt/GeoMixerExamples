@@ -221,7 +221,7 @@ html, body, #map {
         }
     };
     
-	var id = (/id=([a-zA-Z0-9]+)/).exec(window.location);
+	var id = (/id=([a-zA-Z0-9_]+)/).exec(window.location);
     if (id) file = id;
     
     loadInfo({
