@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://maps.kosmosnimki.ru/api/jquery/jquery-1.5.1.min.js"></script>
+    <script src="http://maps.kosmosnimki.ru/api/gmxCore.js"></script>
+    <script src="http://maps.kosmosnimki.ru/api/utilities.js"></script>
+    <script src="http://maps.kosmosnimki.ru/api/translations.js"></script>
+
+    <script src="http://maps.kosmosnimki.ru/api/api.js?key=U92596WMIH" charset="windows-1251"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<title>GeoMixer API - пример использования команды добавления массива векторных объектов на карту</title>
+<style>
+    html, body, #map {
+        height: 100%;
+        margin: 0px;
+    }
+        
+    #infoPanel {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        top: 98px;
+        text-align: center;
+        z-index: 1;
+    }
+    
+    #info {
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0 1px 7px rgba(0,0,0,0.65);
+        padding: 10px;
+    }
+    .leaflet-popup-content {
+        word-wrap: break-word;
+    }
+</style>
+
+</head>
+
+<body>
+<div id="map"></div>
+<div id="infoPanel">
+    <span id="info">
+            Показан пример подключения кадастрового плагина
+    </span>
+</div>
+	<script>
+        var gmxControls = 'controlsBaseIcons';
+
+		createKosmosnimkiMap(document.getElementById("map"), 'maps.kosmosnimki.ru', '7VKHM', function(map) {
+			map.moveTo(73.383865, 54.960880, 13);
+            var hideControl = gmxAPI.map.controlsManager.getCurrent().getControl('hide');
+            if (hideControl) hideControl.setVisible(false);
+            gmxCore.loadModule('cadastre', 'http://maps.kosmosnimki.ru/api/plugins/cadastrepublic/cadastre.js', function(plugin) {
+                plugin.addToMap(map, {
+                    showLeftPanel: false,
+                    showToolbar: false,
+                    //showStandardTools: false,
+                    initCadastre: true
+                });
+                plugin.setCadastreVisibility(true);
+            });
+		});
+	</script>
+</body>
+</html>
