@@ -63,21 +63,24 @@
                 togglable: true
             })
             .on('statechange', function (ev) {
-                if (ev.target.options.isActive) {
-                    if (!cadastre) {
-                        cadastre = gmxCore.loadModule('cadastre', 'http://maps.kosmosnimki.ru/api/plugins/cadastrepublic/cadastre.js', function(plugin) {
-                            plugin.addToMap(map, {
-                                showLeftPanel: false,
-                                showToolbar: false,
-                                //showStandardTools: false,
-                                initCadastre: true
-                            });
-                            plugin.setCadastreVisibility(true);
+                if (!cadastre) {
+                    gmxCore.loadModule('cadastre', 'http://maps.kosmosnimki.ru/api/plugins/cadastrepublic/cadastre.js', function(plugin) {
+                        cadastre = plugin;
+                        cadastre.addToMap(map, {
+                            showLeftPanel: false,
+                            showToolbar: false,
+                            //showStandardTools: false,
+                            initCadastre: true
                         });
-                    }
+                        cadastre.setCadastreVisibility(true);
+                    });
+                }
+                if (ev.target.options.isActive) {
                     // Включить кадастр
+                    if (cadastre) cadastre.setCadastreVisibility(true);
                 } else {
                     // Выключить кадастр
+                    if (cadastre) cadastre.setCadastreVisibility(false);
                 }
             });
             LMap.addControl(cadastreIcon);
