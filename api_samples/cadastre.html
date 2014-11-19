@@ -48,19 +48,39 @@
 	<script>
         var gmxControls = 'controlsBaseIcons';
 
-		createKosmosnimkiMap(document.getElementById("map"), 'maps.kosmosnimki.ru', '7VKHM', function(map) {
-			map.moveTo(73.383865, 54.960880, 13);
-            var hideControl = gmxAPI.map.controlsManager.getCurrent().getControl('hide');
+        createKosmosnimkiMap(document.getElementById("map"), 'maps.kosmosnimki.ru', '7VKHM', function(map) {
+            map.moveTo(73.383865, 54.960880, 13);
+            var LMap = gmxAPI._leaflet.LMap;
+            var controls = gmxAPI.map.controlsManager.getCurrent();
+            var hideControl = controls.getControl('hide');
             if (hideControl) hideControl.setVisible(false);
-            gmxCore.loadModule('cadastre', 'http://maps.kosmosnimki.ru/api/plugins/cadastrepublic/cadastre.js', function(plugin) {
-                plugin.addToMap(map, {
-                    showLeftPanel: false,
-                    showToolbar: false,
-                    //showStandardTools: false,
-                    initCadastre: true
-                });
-                plugin.setCadastreVisibility(true);
+            var cadastre = null;
+            var cadastreIcon = new L.Control.gmxIcon({
+                id: 'cadastre',
+                text: 'Кадастр',
+                title: 'Включить/Выключить кадастровый плагин',
+                style: { width: 'auto' },
+                togglable: true
+            })
+            .on('statechange', function (ev) {
+                if (ev.target.options.isActive) {
+                    if (!cadastre) {
+                        cadastre = gmxCore.loadModule('cadastre', 'http://maps.kosmosnimki.ru/api/plugins/cadastrepublic/cadastre.js', function(plugin) {
+                            plugin.addToMap(map, {
+                                showLeftPanel: false,
+                                showToolbar: false,
+                                //showStandardTools: false,
+                                initCadastre: true
+                            });
+                            plugin.setCadastreVisibility(true);
+                        });
+                    }
+                    // Включить кадастр
+                } else {
+                    // Выключить кадастр
+                }
             });
+            LMap.addControl(cadastreIcon);
 		});
 	</script>
 </body>
