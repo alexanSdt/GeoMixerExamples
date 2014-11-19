@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>GeoMixer Vector Layer Example</title>
+	<meta charset="utf-8" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0px;
+        }
+        
+        #infoPanel {
+            position: absolute;
+			left: 0px;
+			right: 0px;
+			top: 21px;
+            text-align: center;
+			z-index: 1;
+        }
+        
+        #info {
+			background-color: #ffffff;
+			border-radius: 5px;
+            box-shadow: 0 1px 7px rgba(0,0,0,0.65);
+            padding: 10px;
+        }
+    </style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet-src.js"></script>
+	<script src="http://scanex.github.io/Leaflet-GeoMixer/build/leaflet-geomixer-dev.js?key=U92596WMIH"></script>
+</head>
+<body>
+	<div id="map" style="width: 100%; height: 100%"></div>
+    <div id="infoPanel">
+        <span id="info">
+                Регионы России - статистика по атрибуту:
+<select id="extField">
+</select>
+ тип:
+<select id="extFile">
+    <option>column3D</option>
+    <option>columnCylinders</option>
+    <option>pieDonut3D</option>
+</select>
+        </span>
+    </div>
+	<script>
+		var map = L.map('map').setView([65, 65], 3);
+
+		var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+			maxZoom: 18,
+			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+		});
+
+        var prefixSearch = "http://maps.kosmosnimki.ru/VectorLayer/Search.ashx";
+        //var prefixExtFile = "http://scanex.github.io/GeoMixerExamples/api_samples/charts/samples/";
+        var prefixExtFile = "charts/samples/";
+        var fileName = "column3D";
+        var extFile = document.getElementById("extFile");
+        var extField = document.getElementById("extField");
+        var baseField = 'Регион';
+        var out = {};
+
+        L.gmx.loadLayers([
+            {mapID: '7VKHM', layerID: 'D2422C4EE6E448A096CF210C2107BB8B'}
+        ]).then(function(testLayer) {
+            var gmx = testLayer._gmx,
+                attrs = [];
+            for (var name in gmx.tileAttributeIndexes) {
+                if (name !== 'ogc_fid' && name !== baseField) {
+                    var option = document.createElement("option");
+                    option.text = name;
+                    option.value = name;
+                    extField.add(option);
+                }
+            }
+            extField.selectedIndex = 0;
+            prefixSearch += '?layer=' + gmx.layerID;
+            prefixSearch += '&Groupby=' + window.encodeURIComponent('[{"Value":"' + baseField + '"}]');
+            prefixSearch += '&WrapStyle=None';
+            testLayer.bindPopup(
+                '',
+                {
+                    maxWidth: 1560,
+                    popupopen: function(ev) {
+                        var popup = ev.popup,
+                            props = ev.gmx.properties,
+                            key = extField.options[extField.selectedIndex].value,
+                            fileName = extFile.options[extFile.selectedIndex].value,
+                            txt = '<iframe width="700" height="500" src="' + prefixExtFile + fileName + '.html' + '"></iframe>',
+                            //var win = window.open(prefixExtFile + fileName + ".html", "_blank", "resizable=yes,scrollbars=yes");
+                            keys = ['Наименование', 'Адрес современный', 'Категория', 'Подробнее'];
+                        var url = prefixSearch + '&Columns=' + window.encodeURIComponent('[{"Value":"' + baseField + '"},{"Value":"sum([' + key + '])"}]');
+                        out.keys = [baseField, key];
+                        out.name = key;
+                        
+                        gmxAPIutils.request({
+                            type: 'GET',
+                            url: url,
+                            callback: function(ev) {
+                                var res = JSON.parse(ev);
+                                if (res.Status === 'ok' && res.Result.values.length) {
+                                    var items = {};
+                                    res.Result.values.map(function(it, i) {
+                                        var id = i + 1;
+                                        var prop = {};
+                                        prop[baseField] = it[0];
+                                        prop[key] = it[1];
+                                        items[id] = {
+                                            id: id,
+                                            properties: prop
+                                        };
+                                    });
+                                    out.data = items;
+                                    window.getData = function() {
+                                        return out
+                                    };
+                                    popup.setContent(txt);
+                                }
+                                //console.log('sssss', arguments);
+                            }
+                        });
+                        popup.setContent(txt);
+                    }
+                }
+            );
+            osm.addTo(map);
+            testLayer.addTo(map);
+        })
+	</script>
+</body>
+</html>

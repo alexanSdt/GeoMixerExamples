@@ -58,7 +58,7 @@
 
             var titleChart = 'Visitors countries';
             var title = 'Visitors';
-            var opener = window.opener;
+            var opener = window.opener || window.parent;
             if (opener) {
                 console.log('', opener.getData());
                 var fromParent = opener.getData(),
@@ -123,6 +123,7 @@
     </head>
     
     <body>
+    cxcxcxc
         <div id="chartdiv" style="width:600px; height:400px;"></div>
     </body>
 

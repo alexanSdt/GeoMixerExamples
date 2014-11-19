@@ -108,7 +108,7 @@
                 }
             ];
             var title = 'Visitors';
-            var opener = window.opener;
+            var opener = window.opener || window.parent;
             if (opener) {
                 //console.log('', opener.getData());
                 var fromParent = opener.getData(),
