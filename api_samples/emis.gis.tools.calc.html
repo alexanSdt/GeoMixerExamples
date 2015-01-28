@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="http://maps.kosmosnimki.ru/api/apil.js?key=U92596WMIH" charset="windows-1251"></script> 
+	<script src="emis.gis.tools.calc.js"></script> 
+<title>GeoMixer API - примеры использования</title>
+</head>
+
+<body>
+<p>
+<button id="search">Запуск</button>
+</p>
+  <div id="map2" style="width: 600px; height: 450px;"></div><br/>
+
+<script>
+    var gmxControls = 'controlsBaseIcons';
+	createFlashMap(document.getElementById("map2"), function(map)
+	{
+		map.moveTo(37.623590, 55.753757, 8);
+        GlobalMap = map;
+        var LMap = gmxAPI._leaflet.LMap;
+		
+		document.getElementById("search").onclick = function() {
+            InitCalcTool(LMap);
+		}
+	});
+
+</script>
+</body>
+</html>
