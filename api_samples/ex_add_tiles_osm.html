@@ -15,7 +15,8 @@
 
 createFlashMap(document.getElementById("map"), function(map)
 {
-	map.moveTo(37.5, 55.75, 9);
+    map.setMode("satellite");
+	map.moveTo(37.5, 55.75, 8);
 	var osm = map.addObject();
 	osm.setTiles(function(i, j, z) 
 	{
